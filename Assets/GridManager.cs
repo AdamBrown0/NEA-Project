@@ -25,6 +25,7 @@ public class GridManager : MonoBehaviour
 
     private void GenerateGrid()
     {
+        //setting rules for generating non-grass tiles
         int barrierCount = 0;
         int maxBarrier = (rows * cols) / 5;
         int waterCount = 0;
@@ -40,13 +41,10 @@ public class GridManager : MonoBehaviour
         tileSize = tileScale;
 
 
-        
+        //reference Tiles for ease of access later on
         GameObject referenceTileWater = (GameObject)Instantiate(Resources.Load("Water"));
-        //referenceTileWater.SetActive(false);
         GameObject referenceTileGrass = (GameObject)Instantiate(Resources.Load("Grass"));
-        //referenceTileGrass.SetActive(false);
         GameObject referenceTileBarrier = (GameObject)Instantiate(Resources.Load("Barrier"));
-        //referenceTileBarrier.SetActive(false);
         GameObject referenceTileDot = (GameObject)Instantiate(Resources.Load("Dot"));
 
         for (int row = 0; row < rows; row++)
@@ -62,7 +60,6 @@ public class GridManager : MonoBehaviour
                 {
                     if (barrierCount < maxBarrier)
                     {
-                        referenceTileBarrier.SetActive(true);
                         GameObject tileBarrier = (GameObject)Instantiate(referenceTileBarrier, transform);
                         float posX = col * tileSize;
                         float posY = row * -tileSize;
@@ -78,7 +75,6 @@ public class GridManager : MonoBehaviour
                     }
                     else
                     {
-                        referenceTileGrass.SetActive(true);
                         GameObject tileGrass = (GameObject)Instantiate(referenceTileGrass, transform);
 
                         float posX = col * tileSize;
@@ -95,7 +91,6 @@ public class GridManager : MonoBehaviour
                 {
                     if (waterCount < maxWater)
                     {
-                        referenceTileWater.SetActive(true);
                         GameObject tileWater = (GameObject)Instantiate(referenceTileWater, transform);
                         float posX = col * tileSize;
                         float posY = row * -tileSize;
@@ -109,7 +104,6 @@ public class GridManager : MonoBehaviour
                     }
                     else
                     {
-                        referenceTileGrass.SetActive(true);
                         GameObject tileGrass = (GameObject)Instantiate(referenceTileGrass, transform);
 
                         float posX = col * tileSize;
@@ -124,7 +118,6 @@ public class GridManager : MonoBehaviour
                 }
                 else if (tempRan == 1 || tempRan == 2 || tempRan == 3)
                 {
-                    referenceTileGrass.SetActive(true);
                     GameObject tileGrass = (GameObject)Instantiate(referenceTileGrass, transform);
 
                     float posX = col * tileSize;
