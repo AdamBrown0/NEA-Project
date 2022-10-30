@@ -164,94 +164,94 @@ public class GridManager : MonoBehaviour
         transform.position = new Vector2(-gridW / 2 + tileSize / 2, gridH / 2 - tileSize / 2);
     }
 
-    //IEnumerator moveDot()
-    //{
-    //    float tileScale = (float)5 / rows;
+    IEnumerator moveDot()
+    {
+        float tileScale = (float)5 / rows;
 
-    //    GameObject referenceTileDot = (GameObject)Instantiate(Resources.Load("Dot"));
+        GameObject referenceTileDot = (GameObject)Instantiate(Resources.Load("Dot"));
 
-    //    for (int row = 0; row < rows; row++)
-    //    {
-    //        for (int col = 0; col < cols; col++)
-    //        {
-    //            int randomMove = UnityEngine.Random.Range(1, 5);
+        for (int row = 0; row < rows; row++)
+        {
+            for (int col = 0; col < cols; col++)
+            {
+                int randomMove = UnityEngine.Random.Range(1, 5);
 
-    //            if (grid[row, col] == "D")
-    //            {
-    //                if (randomMove == 1)
-    //                {
-    //                    try
-    //                    {
-    //                        grid[row - 1, col] = "Dot";
-    //                    }
-    //                    catch (Exception e)
-    //                    {
-    //                        Debug.Log($"Exception thrown {e}");
-    //                        Debug.Log($"Row = {row}, Col = {col}");
-    //                        Debug.Log("Dot reached edge, skipping move");
-    //                    }
-    //                }
-    //                else if (randomMove == 2)
-    //                {
-    //                    try
-    //                    {
-    //                        grid[row, col - 1] = "Dot";
-    //                    }
-    //                    catch (Exception e)
-    //                    {
-    //                        Debug.Log($"Exception thrown {e}");
-    //                        Debug.Log($"Row = {row}, Col = {col}");
-    //                        Debug.Log("Dot reached edge, skipping move");
-    //                    }
-    //                }
-    //                else if (randomMove == 3)
-    //                {
-    //                    try
-    //                    {
-    //                        grid[row + 1, col] = "Dot";
-    //                    }
-    //                    catch (Exception e)
-    //                    {
-    //                        Debug.Log($"Exception thrown {e}");
-    //                        Debug.Log($"Row = {row}, Col = {col}");
-    //                        Debug.Log("Dot reached edge, skipping move");
-    //                    }
-    //                }
-    //                else if (randomMove == 4)
-    //                {
-    //                    try
-    //                    {
-    //                        grid[row, col + 1] = "Dot";
-    //                    }
-    //                    catch (Exception e)
-    //                    {
-    //                        Debug.Log($"Exception thrown {e}");
-    //                        Debug.Log($"Row = {row}, Col = {col}");
-    //                        Debug.Log("Dot reached edge, skipping move");
-    //                    }
-    //                }
-    //                else
-    //                {
-    //                    Debug.Log($"Error, randomMove was {randomMove}");
-    //                }
+                if (grid[row, col] == "D")
+                {
+                    if (randomMove == 1)
+                    {
+                        try
+                        {
+                            grid[row - 1, col] = "Dot";
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.Log($"Exception thrown {e}");
+                            Debug.Log($"Row = {row}, Col = {col}");
+                            Debug.Log("Dot reached edge, skipping move");
+                        }
+                    }
+                    else if (randomMove == 2)
+                    {
+                        try
+                        {
+                            grid[row, col - 1] = "Dot";
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.Log($"Exception thrown {e}");
+                            Debug.Log($"Row = {row}, Col = {col}");
+                            Debug.Log("Dot reached edge, skipping move");
+                        }
+                    }
+                    else if (randomMove == 3)
+                    {
+                        try
+                        {
+                            grid[row + 1, col] = "Dot";
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.Log($"Exception thrown {e}");
+                            Debug.Log($"Row = {row}, Col = {col}");
+                            Debug.Log("Dot reached edge, skipping move");
+                        }
+                    }
+                    else if (randomMove == 4)
+                    {
+                        try
+                        {
+                            grid[row, col + 1] = "Dot";
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.Log($"Exception thrown {e}");
+                            Debug.Log($"Row = {row}, Col = {col}");
+                            Debug.Log("Dot reached edge, skipping move");
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log($"Error, randomMove was {randomMove}");
+                    }
 
-    //                GameObject tileDot = (GameObject)Instantiate(referenceTileDot, transform);
+                    GameObject tileDot = (GameObject)Instantiate(referenceTileDot, transform);
 
-    //                float posXX = col * tileSize;
-    //                float posYY = row * -tileSize;
+                    float posXX = col * tileSize;
+                    float posYY = row * -tileSize;
 
-    //                tileDot.transform.localScale = new Vector2(tileScale, tileScale);
-    //                tileDot.transform.position = new Vector2(posXX, posYY);
-    //                tileDot.name = $"Dot {posXX} {posYY}";
-    //                grid[row, col] = "D";
+                    tileDot.transform.localScale = new Vector2(tileScale, tileScale);
+                    tileDot.transform.position = new Vector2(posXX, posYY);
+                    tileDot.name = $"Dot {posXX} {posYY}";
+                    grid[row, col] = "D";
 
-    //            }
-    //        }
-    //    }
+                }
+            }
+        }
 
-    //    //wait for 2 seconds
-    //    yield return new WaitForSeconds(2);
-    //}
+        //wait for 2 seconds
+        yield return new WaitForSeconds(2);
+    }
 
     // Update is called once per frame
     void Update()
