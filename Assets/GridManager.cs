@@ -25,6 +25,8 @@ public class GridManager : MonoBehaviour
 
     private void GenerateGrid()
     {
+        //need to make minimum entity count because sometimes none spawn
+
         //setting rules for generating non-grass tiles
         int barrierCount = 0;
         int maxBarrier = (rows * cols) / 5;
