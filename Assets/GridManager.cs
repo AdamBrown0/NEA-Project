@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -25,7 +25,8 @@ public class GridManager : MonoBehaviour
 
     private void GenerateGrid()
     {
-        //need to make minimum entity count because sometimes none spawn
+        //need to make minimum entity count because sometimes none spawn.
+	  // adding line to force commit
 
         //setting rules for generating non-grass tiles
         int barrierCount = 0;
