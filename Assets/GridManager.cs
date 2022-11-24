@@ -5,10 +5,12 @@ using System;
 
 public class GridManager : MonoBehaviour
 {
-    //private FirstLevelUI first;
 
     public static int rows;
     public static int cols;
+    public static int minPreyCount;
+    public static int minPredatorCount;
+
 
     private string[,] grid = new string[rows, cols];
 
@@ -26,7 +28,6 @@ public class GridManager : MonoBehaviour
     private void GenerateGrid()
     {
         //need to make minimum entity count because sometimes none spawn.
-	  // adding line to force commit
 
         //setting rules for generating non-grass tiles
         int barrierCount = 0;
@@ -34,6 +35,7 @@ public class GridManager : MonoBehaviour
         int waterCount = 0;
         int maxWater = (rows * cols) / 5;
         int dotCount = 0;
+
         int maxDot = (rows * cols) / 10;
 
         //makes sure square
@@ -48,7 +50,8 @@ public class GridManager : MonoBehaviour
         GameObject referenceTileWater = (GameObject)Instantiate(Resources.Load("Water"));
         GameObject referenceTileGrass = (GameObject)Instantiate(Resources.Load("Grass"));
         GameObject referenceTileBarrier = (GameObject)Instantiate(Resources.Load("Barrier"));
-        GameObject referenceTileDot = (GameObject)Instantiate(Resources.Load("Dot"));
+        GameObject referenceTilePredator = (GameObject)Instantiate(Resources.Load("Predator"));
+        GameObject referenceTilePrey = (GameObject)Instantiate(Resources.Load("Prey"));
 
         for (int row = 0; row < rows; row++)
         {
@@ -135,14 +138,14 @@ public class GridManager : MonoBehaviour
                     {
                         if (dotCount < maxDot)
                         {
-                            GameObject tileDot = (GameObject)Instantiate(referenceTileDot, transform);
+                            //GameObject tileDot = (GameObject)Instantiate(referenceTileDot, transform);
 
                             float posXX = col * tileSize;
                             float posYY = row * -tileSize;
 
-                            tileDot.transform.localScale = new Vector2(tileScale, tileScale);
-                            tileDot.transform.position = new Vector2(posXX, posYY);
-                            tileDot.name = $"Dot {posXX} {posYY}";
+                            //tileDot.transform.localScale = new Vector2(tileScale, tileScale);
+                            //tileDot.transform.position = new Vector2(posXX, posYY);
+                            //tileDot.name = $"Dot {posXX} {posYY}";
                             grid[row, col] = "D";
                         }
                     }
@@ -160,6 +163,8 @@ public class GridManager : MonoBehaviour
         Destroy(referenceTileGrass);
         Destroy(referenceTileWater);
         Destroy(referenceTileBarrier);
+        Destroy(referenceTilePredator);
+        Destroy(referenceTilePrey);
 
         //camera
         float gridW = cols * tileSize;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SecondLevelUI : MonoBehaviour
 {
-    //10 x 16
+    //10 x 16 aka default
 
     private GridManager grid;
 
@@ -15,5 +15,11 @@ public class SecondLevelUI : MonoBehaviour
 
         GridManager.cols = 16;
         Debug.Log($"Grid Columns set to {GridManager.cols}");
+
+        GridManager.minPreyCount = 3;
+        Debug.Log($"Min Prey count set to {GridManager.minPreyCount}");
+
+        GridManager.minPredatorCount = 3;
+        Debug.Log($"Min Predator count set to {GridManager.minPredatorCount}");
     }
 }

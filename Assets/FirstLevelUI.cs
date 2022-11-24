@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class FirstLevelUI : MonoBehaviour
 {
-    //5 x 8 aka Default
+    //5 x 8 
 
     private GridManager grid;
     
@@ -17,5 +17,11 @@ public class FirstLevelUI : MonoBehaviour
 
         GridManager.cols = 8;
         Debug.Log($"Grid Columns set to {GridManager.cols}");
+
+        GridManager.minPreyCount = 1;
+        Debug.Log($"Min Prey count set to {GridManager.minPreyCount}");
+
+        GridManager.minPredatorCount = 1;
+        Debug.Log($"Min Predator count set to {GridManager.minPredatorCount}");
     }
 }
