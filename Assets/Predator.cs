@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Assets;
+using System;
 
-namespace Assets
-{
-    internal class Predator : Entity
+/// <summary>
+/// Prey class:
+/// Allows use of objects to identify each prey entity
+/// </summary>
+internal class Predator : Entity
     {
         //set predator entity to predetermined values
-        public Predator(float energyLevel, float foodLevel, float waterLevel, int maxOffsprings, float reproductionProb, int numOffsprings, float minReproductionEnergy)
+        public Predator(float energyLevel, float foodLevel, float waterLevel, int maxOffsprings, float reproductionProb, int numOffsprings, float minReproductionEnergy, string name, int x, int y)
         {
             this.energyLevel = energyLevel;
             this.foodLevel = foodLevel;
@@ -18,6 +17,9 @@ namespace Assets
             this.reproductionProb = reproductionProb;
             this.numOffsprings = numOffsprings;
             this.minReproductionEnergy = minReproductionEnergy;
+            this.name = name;
+            this.x = x;
+            this.y = y;
         }
 
         //default predator entity values TBD
@@ -27,4 +29,4 @@ namespace Assets
         }
 
     }
-}
+

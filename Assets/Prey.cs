@@ -9,7 +9,7 @@ internal class Prey : Entity
 {
 
 	//set prey entity to predetermined values
-	public Prey(float energyLevel, float foodLevel, float waterLevel, int maxOffsprings, float reproductionProb, int numOffsprings, float minReproductionEnergy)
+	public Prey(float energyLevel, float foodLevel, float waterLevel, int maxOffsprings, float reproductionProb, int numOffsprings, float minReproductionEnergy, string name, int x, int y)
 	{
 		this.energyLevel = energyLevel;
 		this.foodLevel = foodLevel;
@@ -18,6 +18,9 @@ internal class Prey : Entity
 		this.reproductionProb = reproductionProb;
 		this.numOffsprings = numOffsprings;
 		this.minReproductionEnergy = minReproductionEnergy;
+		this.name = name;
+		this.x = x;
+		this.y = y;
 	}
 
 	//default prey entity values TBD

@@ -13,6 +13,7 @@ public class GridManager : MonoBehaviour
 
 
     private string[,] grid = new string[rows, cols];
+    private object[,] entityGrid = new object[rows, cols];
 
 
     private float tileSize = 1f;
@@ -22,7 +23,12 @@ public class GridManager : MonoBehaviour
     {
         //rows = first.rows;
         //cols = first.cols;
+        Debug.ClearDeveloperConsole();
+        Prey p = new Prey(10, 10, 10, 5, 25, 0, 10, "Bob", 3, 2);
+        Predator pred = new Predator(10, 10, 10, 5, 25, 0, 10, "Pred", 3, 2);
         GenerateGrid();
+        p.getBlockNeighbours(grid);
+        createEntity(entityGrid, p, pred, 3, 2);
     }
 
     private void GenerateGrid()
@@ -62,6 +68,7 @@ public class GridManager : MonoBehaviour
 
                 int anotherRan = UnityEngine.Random.Range(1, 10);
 
+                //create barrier
                 if (tempRan == 4)
                 {
                     if (barrierCount < maxBarrier)
@@ -93,6 +100,7 @@ public class GridManager : MonoBehaviour
                         grid[row, col] = "G";
                     }
                 }
+                //create water
                 else if (tempRan == 5)
                 {
                     if (waterCount < maxWater)
@@ -122,6 +130,8 @@ public class GridManager : MonoBehaviour
                         grid[row, col] = "G";
                     }
                 }
+                //create entities
+                //entities can only generate on grass tiles so grass tile is always created underneath
                 else if (tempRan == 1 || tempRan == 2 || tempRan == 3)
                 {
                     GameObject tileGrass = (GameObject)Instantiate(referenceTileGrass, transform);
@@ -136,18 +146,7 @@ public class GridManager : MonoBehaviour
                     grid[row, col] = "G";
                     if (anotherRan == 3)
                     {
-                        if (dotCount < maxDot)
-                        {
-                            //GameObject tileDot = (GameObject)Instantiate(referenceTileDot, transform);
-
-                            float posXX = col * tileSize;
-                            float posYY = row * -tileSize;
-
-                            //tileDot.transform.localScale = new Vector2(tileScale, tileScale);
-                            //tileDot.transform.position = new Vector2(posXX, posYY);
-                            //tileDot.name = $"Dot {posXX} {posYY}";
-                            grid[row, col] = "D";
-                        }
+                        
                     }
                 }
                 else
@@ -170,6 +169,16 @@ public class GridManager : MonoBehaviour
         float gridW = cols * tileSize;
         float gridH = rows * tileSize;
         transform.position = new Vector2(-gridW / 2 + tileSize / 2, gridH / 2 - tileSize / 2);
+    }
+
+    private object[,] createEntity(object[,] entityGridC, Prey entityPrey, Predator entityPredator, int posX, int posY)
+    {
+
+        entityGridC[posX, posY] = entityPrey;
+
+        Debug.Log($"ENTITY AT {posX} {posY}, name {entityPrey.getName()} type: {entityGridC[posX, posY]}");
+
+        return entityGridC;
     }
 
     IEnumerator moveDot()

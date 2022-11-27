@@ -45,33 +45,113 @@ namespace Assets
 
         public int[] getPos() { return new int[2] { x, y }; }
 
-        public string[,] getNeighbours(string[,] grid)
-        {
-            bool leftEdge = false;
-            bool rightEdge = false;
-            bool topEdge = false;
-            bool bottomEdge = false;
 
-            if (x == 0)
+        /* create 3x3 array for both entities and blocks
+         * for i in that array check whether entity grid has entities, if it does update 3x3 entity array
+         * also check which blocks are next to entity
+         * return both arrays
+         */
+
+        //<array>.GetLength(x) where x is the dimension: 0 for rows, 1 for columns
+
+        private string[,] createBlockGridBigArray(string[,] blockGrid)
+        {
+            string[,] bigArray = new string[blockGrid.GetLength(0) + 2, blockGrid.GetLength(1) + 2];
+            for (int rows = 0; rows < bigArray.GetLength(0); rows++)
             {
-                leftEdge = true;
+                for (int cols = 0; cols < bigArray.GetLength(1); cols++)
+                {
+                    bigArray[rows, cols] = null;
+                }
             }
-            else if (x == grid.GetLength(0))
+            for (int rows = 0; rows < bigArray.GetLength(0); rows++)
             {
-                rightEdge = true;
+                for (int cols = 0; cols < bigArray.GetLength(1); cols++)
+                {
+                    if (rows == 0 || cols == 0 || rows == bigArray.GetLength(0) - 1 || cols == bigArray.GetLength(1) - 1)
+                    {
+                        Debug.Log($"Do nothing at row: {rows} col: {cols}");
+                    }
+                    else
+                    {
+                        Debug.Log($"Placed {blockGrid[rows - 1, cols - 1]} at row: {rows} col: {cols}");
+                        bigArray[rows, cols] = blockGrid[rows - 1, cols - 1];
+                    }
+                }
             }
-            else if (y == 0)
+            return bigArray;
+        }
+
+        public string[,] getBlockNeighbours(string[,] blockGrid)
+        {
+            string[,] bigArray = createBlockGridBigArray(blockGrid);  //creates array that is 1 bigger on each side to eliminate need for edge cases
+            string[,] neighbours = new string[3, 3];
+
+            int[] rowsarr = { -1, -1, -1, 0, 0, 0, +1, +1, +1 };
+            int[] colsarr = { -1, 0, +1, -1, 0, +1, -1, 0, +1 };
+
+            int yB = 0;
+            int xB = 0;
+            for (int i = 0; i < 9; i++)
             {
-                topEdge = true;
+                
+                neighbours[xB, yB] = bigArray[y + rowsarr[i], x + colsarr[i]];
+                if (i == 2 || i == 5)
+                {
+                    xB = 0;
+                    yB += 1;
+                    Debug.Log($"x: {xB} y: {yB}");
+                }
+                else
+                {
+                    xB += 1;
+                    Debug.Log($"x: {xB} y: {yB}");
+                }
             }
-            else if (y == grid.GetLength(0))
+
+            for (int cols = 0; cols < neighbours.GetLength(0); cols++)
             {
-                bottomEdge = true;
+                for (int rows = 0; rows < neighbours.GetLength(1); rows++)
+                {
+                    Debug.Log($"Tile {neighbours[rows, cols]} at row: {rows} col: {cols}");
+                }
             }
-            else
+
+            return null;
+        }
+
+        private string[,] createEntityGridBigArray(string[,] entityGrid)
+        {
+            string[,] bigArray = new string[entityGrid.GetLength(0) + 2, entityGrid.GetLength(1) + 2];
+            for (int rows = 0; rows < bigArray.GetLength(0); rows++)
             {
-                Debug.Log($"{name} is not on edge");
+                for (int cols = 0; cols < bigArray.GetLength(1); cols++)
+                {
+                    bigArray[rows, cols] = null;
+                }
             }
+            for (int rows = 0; rows < bigArray.GetLength(0); rows++)
+            {
+                for (int cols = 0; cols < bigArray.GetLength(1); cols++)
+                {
+                    if (rows == 0 || cols == 0 || rows == bigArray.GetLength(0) - 1 || cols == bigArray.GetLength(1) - 1)
+                    {
+                        Debug.Log($"Do nothing at row: {rows} col: {cols}");
+                    }
+                    else
+                    {
+                        Debug.Log($"Placed {entityGrid[rows - 1, cols - 1]} at row: {rows} col: {cols}");
+                        bigArray[rows, cols] = entityGrid[rows - 1, cols - 1];
+                    }
+                }
+            }
+            return bigArray;
+        }
+
+        public string[,] getEntityNeighbours(string[,] entityGrid)
+        {
+            string[,] bigArray = createEntityGridBigArray(entityGrid); //creates array that is 1 bigger on each side to eliminate need for edge cases
+
             return null;
         }
     }
