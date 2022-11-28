@@ -95,7 +95,7 @@ namespace Assets
             for (int i = 0; i < 9; i++)
             {
                 
-                neighbours[xB, yB] = bigArray[y + rowsarr[i], x + colsarr[i]];
+                neighbours[xB, yB] = bigArray[y + rowsarr[i], x + colsarr[i]]; //
                 if (i == 2 || i == 5)
                 {
                     xB = 0;
