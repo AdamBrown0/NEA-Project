@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.IO;
 
 public class GridManager : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class GridManager : MonoBehaviour
     public static int cols;
     public static int minPreyCount;
     public static int minPredatorCount;
+    public static int maxPreyCount;
+    public static int maxPredatorCount;
 
 
     private string[,] grid = new string[rows, cols];
@@ -24,11 +27,8 @@ public class GridManager : MonoBehaviour
         //rows = first.rows;
         //cols = first.cols;
         Debug.ClearDeveloperConsole();
-        Prey p = new Prey(10, 10, 10, 5, 25, 0, 10, "Bob", 3, 2);
-        Predator pred = new Predator(10, 10, 10, 5, 25, 0, 10, "Pred", 3, 2);
         GenerateGrid();
-        p.getBlockNeighbours(grid);
-        createEntity(entityGrid, p, pred, 3, 2);
+        GenerateEntities();
     }
 
     private void GenerateGrid()
@@ -56,20 +56,19 @@ public class GridManager : MonoBehaviour
         GameObject referenceTileWater = (GameObject)Instantiate(Resources.Load("Water"));
         GameObject referenceTileGrass = (GameObject)Instantiate(Resources.Load("Grass"));
         GameObject referenceTileBarrier = (GameObject)Instantiate(Resources.Load("Barrier"));
-        GameObject referenceTilePredator = (GameObject)Instantiate(Resources.Load("Predator"));
-        GameObject referenceTilePrey = (GameObject)Instantiate(Resources.Load("Prey"));
+       
 
         for (int row = 0; row < rows; row++)
         {
             for (int col = 0; col < cols; col++)
             {
-                int tempRan = UnityEngine.Random.Range(1, 6);
-                Debug.Log($"Position = ({col}, {row}), tempRan = {tempRan}");
+                int random = UnityEngine.Random.Range(1, 6);
+                Debug.Log($"Position = ({col}, {row}), random = {random}");
 
                 int anotherRan = UnityEngine.Random.Range(1, 10);
 
                 //create barrier
-                if (tempRan == 4)
+                if (random == 4)
                 {
                     if (barrierCount < maxBarrier)
                     {
@@ -101,7 +100,7 @@ public class GridManager : MonoBehaviour
                     }
                 }
                 //create water
-                else if (tempRan == 5)
+                else if (random == 5)
                 {
                     if (waterCount < maxWater)
                     {
@@ -130,9 +129,9 @@ public class GridManager : MonoBehaviour
                         grid[row, col] = "G";
                     }
                 }
-                //create entities
+                //create entities 
                 //entities can only generate on grass tiles so grass tile is always created underneath
-                else if (tempRan == 1 || tempRan == 2 || tempRan == 3)
+                else if (random == 1 || random == 2 || random == 3)
                 {
                     GameObject tileGrass = (GameObject)Instantiate(referenceTileGrass, transform);
 
@@ -144,14 +143,10 @@ public class GridManager : MonoBehaviour
                     tileGrass.name = $"Grass {posX} {posY}";
 
                     grid[row, col] = "G";
-                    if (anotherRan == 3)
-                    {
-                        
-                    }
                 }
                 else
                 {
-                    Debug.Log($"tempRan = {tempRan}");
+                    Debug.Log($"random = {random}");
                 }
 
                 
@@ -162,8 +157,7 @@ public class GridManager : MonoBehaviour
         Destroy(referenceTileGrass);
         Destroy(referenceTileWater);
         Destroy(referenceTileBarrier);
-        Destroy(referenceTilePredator);
-        Destroy(referenceTilePrey);
+        
 
         //camera
         float gridW = cols * tileSize;
@@ -171,15 +165,221 @@ public class GridManager : MonoBehaviour
         transform.position = new Vector2(-gridW / 2 + tileSize / 2, gridH / 2 - tileSize / 2);
     }
 
-    private object[,] createEntity(object[,] entityGridC, Prey entityPrey, Predator entityPredator, int posX, int posY)
+    private void GenerateEntities()
     {
+        int preyCount = 0;
+        int predatorCount = 0;
+        List<string> names = new List<string>();
 
-        entityGridC[posX, posY] = entityPrey;
+        string path = "Assets/Resources/names.txt";
+        //Read the text from directly from the test.txt file
+        StreamReader reader = new StreamReader(path);
+        while (!reader.EndOfStream)
+        {
+            names.Add(reader.ReadLine());
+        }
+        reader.Close();
 
-        Debug.Log($"ENTITY AT {posX} {posY}, name {entityPrey.getName()} type: {entityGridC[posX, posY]}");
+        int randx = 0;
+        int randy = 0;
 
-        return entityGridC;
+        do
+        {
+            int random = UnityEngine.Random.Range(1, 3);
+            int randomX = UnityEngine.Random.Range(0, rows);
+            int randomY = UnityEngine.Random.Range(0, cols);
+            Debug.Log($"randomX: {randomX}, randomY {randomY}");
+            randx = randomX;
+            randy = randomY;
+            if (grid[randomX, randomY] == "G")
+            {
+                if (random == 1) //prey  float energyLevel, float foodLevel, float waterLevel, int maxOffsprings, float reproductionProb, int numOffsprings, float minReproductionEnergy, string name, int x, int y
+                {
+                    float energyLevel = UnityEngine.Random.Range(5f, 10f);
+                    float foodLevel = UnityEngine.Random.Range(5f, 10f);
+                    float waterLevel = UnityEngine.Random.Range(5f, 10f);
+                    int maxOffsprings = UnityEngine.Random.Range(0, 6);
+                    float reproductionProb = UnityEngine.Random.Range(0f, 100f);
+                    int numOffsprings = 0;
+                    float minReproductionEnergy = UnityEngine.Random.Range(2f, 10f);
+                    string name = names[UnityEngine.Random.Range(0, names.Count + 1)];
+                    names.Remove(name);
+                    int x = randomX;
+                    int y = randomY;
+                    entityGrid[x, y] = new Prey(energyLevel, foodLevel, waterLevel, maxOffsprings, reproductionProb, numOffsprings, minReproductionEnergy, name, x, y);
+                    Debug.Log($"Prey created at {randomX}, {randomY}. Name: {name}");
+                    preyCount++;
+                }
+                else if (random == 2)
+                {
+                    float energyLevel = UnityEngine.Random.Range(5f, 10f);
+                    float foodLevel = UnityEngine.Random.Range(5f, 10f);
+                    float waterLevel = UnityEngine.Random.Range(5f, 10f);
+                    int maxOffsprings = UnityEngine.Random.Range(0, 6);
+                    float reproductionProb = UnityEngine.Random.Range(0f, 100f);
+                    int numOffsprings = 0;
+                    float minReproductionEnergy = UnityEngine.Random.Range(2f, 10f);
+                    string name = names[UnityEngine.Random.Range(0, names.Count + 1)];
+                    names.Remove(name);
+                    int x = randomX;
+                    int y = randomY;
+                    entityGrid[x, y] = new Predator(energyLevel, foodLevel, waterLevel, maxOffsprings, reproductionProb, numOffsprings, minReproductionEnergy, name, x, y);
+                    Debug.Log($"Predator created at {randomX}, {randomY}. Name: {name}");
+                    predatorCount++;
+                }
+                else
+                {
+                    Debug.Log($"Tried to create entity at {randomX}, {randomY}. random: {random}");
+                }
+            }
+            else
+            {
+                Debug.Log($"No entity created at {randomX}, {randomY} due to tile not being grass, tile was {grid[randomX, randomY]}");
+            }
+        } while (preyCount < minPreyCount || predatorCount < minPredatorCount || maxPreyCount > preyCount || maxPredatorCount > predatorCount);
+
+        Type t = entityGrid[randx, randy].GetType();
+        Debug.Log($"randx: {randx}, randy {randy}");
+        if (t.Equals(typeof(Prey)))
+        {
+            Prey p = (Prey) entityGrid[randx, randy];
+            Debug.Log("name: " + p.getName());
+            Debug.Log("water: " + p.getWaterLevel());
+            string[,] blockNeighbours = p.getBlockNeighbours(grid);
+            for (int rows = 0; rows < blockNeighbours.GetLength(0); rows++)
+            {
+                for (int cols = 0; cols < blockNeighbours.GetLength(1); cols++)
+                {
+                    if (blockNeighbours[rows, cols] != null)
+                    {
+                        Debug.Log($"Tile {blockNeighbours[rows, cols]} at {rows} {cols}");
+                    }
+                    else
+                    {
+                        Debug.Log($"getBlockNeighbours returned null");
+                    }
+                }
+            }
+            object[,] entityNeighbours = p.getEntityNeighbours(entityGrid);
+            for (int rows = 0; rows < entityNeighbours.GetLength(0); rows++)
+            {
+                for (int cols = 0; cols < entityNeighbours.GetLength(1); cols++)
+                {
+                    if (entityNeighbours[rows, cols] != null)
+                    {
+                        Type tp = entityNeighbours[rows, cols].GetType();
+                        Prey pe = (Prey)entityNeighbours[rows, cols];
+                        Debug.Log($"Tile {tp.ToString()} at {rows} {cols}. name: {pe.getName()}");
+                    }
+                    else
+                    {
+                        Debug.Log($"getBlockNeighbours returned null");
+                    }
+                }
+            }
+        }
+        else if (t.Equals(typeof(Predator)))
+        {
+            Predator pred = (Predator)entityGrid[randx, randy];
+            Debug.Log("name: " + pred.getName());
+            Debug.Log("water: " + pred.getWaterLevel());
+            string[,] blockNeighbours = pred.getBlockNeighbours(grid);
+            for (int rows = 0; rows < blockNeighbours.GetLength(0); rows++)
+            {
+                for (int cols = 0; cols < blockNeighbours.GetLength(1); cols++)
+                {
+                    if (blockNeighbours[rows, cols] != null)
+                    {
+                        Debug.Log($"Tile {blockNeighbours[rows, cols]} at {rows} {cols}");
+                    }
+                    else
+                    {
+                        Debug.Log($"getBlockNeighbours returned null");
+                    }
+                    
+                }
+            }
+            object[,] entityNeighbours = pred.getEntityNeighbours(entityGrid);
+            for (int rows = 0; rows < entityNeighbours.GetLength(0); rows++)
+            {
+                for (int cols = 0; cols < entityNeighbours.GetLength(1); cols++)
+                {
+                    if (entityNeighbours[rows, cols] != null)
+                    {
+                        Type tp = entityNeighbours[rows, cols].GetType();
+                        Predator pe = (Predator)entityNeighbours[rows, cols];
+                        Debug.Log($"Tile {tp.ToString()} at {rows} {cols}. name: {pe.getName()}");
+                    }
+                    else
+                    {
+                        Debug.Log($"getBlockNeighbours returned null");
+                    }
+                    
+                }
+            }
+        }
+
+        GameObject referenceTilePredator = (GameObject)Instantiate(Resources.Load("Predator"));
+        GameObject referenceTilePrey = (GameObject)Instantiate(Resources.Load("Prey"));
+        float tileScale = (float)5 / rows;
+        
+
+        for (int row = 0; row < rows; row++)
+        {
+            for (int col = 0; col < cols; col++)
+            {
+                if (entityGrid[row, col] != null)
+                {
+                    t = entityGrid[row, col].GetType();
+                }
+                else
+                {
+                    t = null;
+                }
+                if (t == null)
+                {
+                    Debug.Log("t equals null");
+                }
+                else if (t.Equals(typeof(Prey)))
+                {
+                    GameObject tilePrey = (GameObject)Instantiate(referenceTilePrey, transform);
+
+                    float posX = col * tileSize;
+                    float posY = row * -tileSize;
+
+                    tilePrey.transform.localScale = new Vector2(tileScale, tileScale);
+                    tilePrey.transform.position = new Vector2(posX, posY);
+                    Prey pe = (Prey)entityGrid[row, col];
+                    tilePrey.name = $"Prey({pe.getName()}) {posX} {posY}";
+                }
+                else if (t.Equals(typeof(Predator)))
+                {
+                    GameObject tilePredator = (GameObject)Instantiate(referenceTilePredator, transform);
+
+                    float posX = col * tileSize;
+                    float posY = row * -tileSize;
+
+                    tilePredator.transform.localScale = new Vector2(tileScale, tileScale);
+                    tilePredator.transform.position = new Vector2(posX, posY);
+                    Predator pe = (Predator)entityGrid[row, col];
+                    tilePredator.name = $"Predator({pe.getName()}) {posX} {posY}";
+                }
+            }
+        }
+        Destroy(referenceTilePredator);
+        Destroy(referenceTilePrey);
+
     }
+
+    //private object[,] createEntity(object[,] entityGridC, Prey entityPrey, Predator entityPredator, int posX, int posY)
+    //{
+
+    //    entityGridC[posX, posY] = entityPrey;
+
+    //    Debug.Log($"ENTITY AT {posX} {posY}, name {entityPrey.getName()} type: {entityGridC[posX, posY]}");
+
+    //    return entityGridC;
+    //}
 
     IEnumerator moveDot()
     {

@@ -100,12 +100,12 @@ namespace Assets
                 {
                     xB = 0;
                     yB += 1;
-                    Debug.Log($"x: {xB} y: {yB}");
+                    //Debug.Log($"x: {xB} y: {yB}");
                 }
                 else
                 {
                     xB += 1;
-                    Debug.Log($"x: {xB} y: {yB}");
+                    //Debug.Log($"x: {xB} y: {yB}");
                 }
             }
 
@@ -113,16 +113,16 @@ namespace Assets
             {
                 for (int rows = 0; rows < neighbours.GetLength(1); rows++)
                 {
-                    Debug.Log($"Tile {neighbours[rows, cols]} at row: {rows} col: {cols}");
+                    Debug.Log($"Tile {neighbours[cols, rows]} at row: {rows} col: {cols}");
                 }
             }
 
-            return null;
+            return neighbours;
         }
 
-        private string[,] createEntityGridBigArray(string[,] entityGrid)
+        private object[,] createEntityGridBigArray(object[,] entityGrid)
         {
-            string[,] bigArray = new string[entityGrid.GetLength(0) + 2, entityGrid.GetLength(1) + 2];
+            object[,] bigArray = new object[entityGrid.GetLength(0) + 2, entityGrid.GetLength(1) + 2];
             for (int rows = 0; rows < bigArray.GetLength(0); rows++)
             {
                 for (int cols = 0; cols < bigArray.GetLength(1); cols++)
@@ -140,7 +140,15 @@ namespace Assets
                     }
                     else
                     {
-                        Debug.Log($"Placed {entityGrid[rows - 1, cols - 1]} at row: {rows} col: {cols}");
+                        if (entityGrid[rows - 1, cols - 1] != null)
+                        {
+                            Type t = entityGrid[rows - 1, cols - 1].GetType();
+                            Debug.Log($"Placed {t.ToString()} at row: {rows} col: {cols}");
+                        }
+                        else
+                        {
+                            Debug.Log($"Placed null at row: {rows} col: {cols}");
+                        }
                         bigArray[rows, cols] = entityGrid[rows - 1, cols - 1];
                     }
                 }
@@ -148,11 +156,51 @@ namespace Assets
             return bigArray;
         }
 
-        public string[,] getEntityNeighbours(string[,] entityGrid)
+        public object[,] getEntityNeighbours(object[,] entityGrid)
         {
-            string[,] bigArray = createEntityGridBigArray(entityGrid); //creates array that is 1 bigger on each side to eliminate need for edge cases
+            object[,] bigArray = createEntityGridBigArray(entityGrid); //creates array that is 1 bigger on each side to eliminate need for edge cases
 
-            return null;
+            object[,] neighbours = new object[3, 3];
+
+            int[] rowsarr = { -1, -1, -1, 0, 0, 0, +1, +1, +1 };
+            int[] colsarr = { -1, 0, +1, -1, 0, +1, -1, 0, +1 };
+
+            int yB = 0;
+            int xB = 0;
+            for (int i = 0; i < 9; i++)
+            {
+
+                neighbours[xB, yB] = bigArray[y + rowsarr[i], x + colsarr[i]];
+                if (i == 2 || i == 5)
+                {
+                    xB = 0;
+                    yB += 1;
+                    //Debug.Log($"x: {xB} y: {yB}");
+                }
+                else
+                {
+                    xB += 1;
+                    //Debug.Log($"x: {xB} y: {yB}");
+                }
+            }
+
+            for (int cols = 0; cols < neighbours.GetLength(0); cols++)
+            {
+                for (int rows = 0; rows < neighbours.GetLength(1); rows++)
+                {
+                    if (neighbours[cols, rows] != null)
+                    {
+                        Type t = neighbours[cols, rows].GetType();
+                        Debug.Log($"Neighbour Tile {t.ToString()} at row: {rows} col: {cols}");
+                    }
+                    else
+                    {
+                        Debug.Log($"Neighbour Tile null at row: {rows} col: {cols}");
+                    }
+                }
+            }
+
+            return neighbours;
         }
     }
 }
