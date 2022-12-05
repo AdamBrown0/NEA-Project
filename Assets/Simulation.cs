@@ -11,11 +11,11 @@ namespace Assets
 {
     public class Simulation : MonoBehaviour
     {
-        private static GameObject StepCounter = GameObject.Find("StepCounter");
-        
+        private GameObject StepCounter;
 
         void Start()
         {
+            StepCounter = GameObject.Find("StepCounter");
             StepCounter.SetActive(true);
             StepCounter.transform.SetParent(GridManager.GridManagerTransform);
             StepCounter.transform.localPosition = new Vector2(-1f, -1f);
@@ -30,6 +30,7 @@ namespace Assets
                 // Start the Coroutine
                 StartCoroutine(AutoRunSimulation(0.5f));
             }
+            
         }
         public IEnumerator AutoRunSimulation(float stepDelay)
         {
@@ -37,12 +38,16 @@ namespace Assets
             while (autoRun)
             {
                 // Run the simulation code here
-                StepCount++;
-                StepCounter.GetComponent<Text>().text = $"Step: {StepCount.ToString()}";
+                StepSimulation();
 
                 // Wait for the set amount of time before running the next iteration
                 yield return new WaitForSeconds(stepDelay);
             }
+        }
+        public void StepSimulation()
+        {
+            StepCount++;
+            StepCounter.GetComponent<Text>().text = $"Step: {StepCount.ToString()}";
         }
     }
 }
