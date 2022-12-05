@@ -20,15 +20,24 @@ public class GridManager : MonoBehaviour
 
 
     private float tileSize = 1f;
+    private float tileScale = 0f;
+
+    SpriteRenderer PreyRenderer;
+    SpriteRenderer PredatorRenderer;
+
+    public static Transform GridManagerTransform;
 
     // Start is called before the first frame update
     void Start()
     {
         //rows = first.rows;
         //cols = first.cols;
+        tileScale = (float)5 / (float)rows;
+        tileSize = tileScale;
         Debug.ClearDeveloperConsole();
         GenerateGrid();
         GenerateEntities();
+        GridManagerTransform = transform;
     }
 
     private void GenerateGrid()
@@ -40,16 +49,13 @@ public class GridManager : MonoBehaviour
         int maxBarrier = (rows * cols) / 5;
         int waterCount = 0;
         int maxWater = (rows * cols) / 5;
-        int dotCount = 0;
-
-        int maxDot = (rows * cols) / 10;
 
         //makes sure square
         //cols = 8 * (5 / rows);
 
         //makes scale nice
-        float tileScale = (float) 5 / rows;
-        tileSize = tileScale;
+        //tileScale = (float)5 / (float) rows;
+        //tileSize = tileScale;
 
 
         //reference Tiles for ease of access later on
@@ -84,7 +90,6 @@ public class GridManager : MonoBehaviour
                         tileBarrier.transform.position = new Vector2(posX, posY);
                         tileBarrier.name = $"Barrier {posX} {posY}";
                         barrierCount += 1;
-                        tileBarrier.layer = 1;
 
                         grid[row, col] = "B";
                     }
@@ -98,7 +103,6 @@ public class GridManager : MonoBehaviour
                         tileGrass.transform.localScale = new Vector2(tileScale, tileScale);
                         tileGrass.transform.position = new Vector2(posX, posY);
                         tileGrass.name = $"Grass {posX} {posY}";
-                        tileGrass.layer = 1;
 
                         grid[row, col] = "G";
                     }
@@ -116,7 +120,6 @@ public class GridManager : MonoBehaviour
                         tileWater.transform.position = new Vector2(posX, posY);
                         tileWater.name = $"Water {posX} {posY}";
                         waterCount += 1;
-                        tileWater.layer = 1;
 
                         grid[row, col] = "W";
                     }
@@ -130,7 +133,6 @@ public class GridManager : MonoBehaviour
                         tileGrass.transform.localScale = new Vector2(tileScale, tileScale);
                         tileGrass.transform.position = new Vector2(posX, posY);
                         tileGrass.name = $"Grass {posX} {posY}";
-                        tileGrass.layer = 1;
 
                         grid[row, col] = "G";
                     }
@@ -147,7 +149,6 @@ public class GridManager : MonoBehaviour
                     tileGrass.transform.localScale = new Vector2(tileScale, tileScale);
                     tileGrass.transform.position = new Vector2(posX, posY);
                     tileGrass.name = $"Grass {posX} {posY}";
-                    tileGrass.layer = 1 ;
 
                     grid[row, col] = "G";
                 }
@@ -177,8 +178,9 @@ public class GridManager : MonoBehaviour
     {
         GameObject referenceTilePredator = (GameObject)Instantiate(Resources.Load("Predator"));
         GameObject referenceTilePrey = (GameObject)Instantiate(Resources.Load("Prey"));
-        float tileScale = (float)(5 / rows);
+        //tileScale = (float)5 / rows;
         //tileSize = tileScale;
+        Debug.Log("tile SCale is: " + tileScale + "tile Size is: " + tileSize);
         for (int row = 0; row < rows; row++)
         {
             for (int col = 0; col < cols; col++)
@@ -196,38 +198,52 @@ public class GridManager : MonoBehaviour
                 }
                 if (t == null)
                 {
-                    Debug.Log("t equals null");
+                    //Debug.Log("t equals null");
                 }
                 else if (t.Equals(typeof(Prey)))
                 {
                     GameObject tilePrey = (GameObject)Instantiate(referenceTilePrey, transform);
 
-                    float posX = row * tileSize;
-                    float posY = col * -tileSize;
+                    float posX = col * tileSize;
+                    float posY = row * -tileSize;
+                    Debug.Log($"tileSize at Prey: {tileSize}, posX: {posX}, posY: {posY}");
+
+                    Debug.Log($"Prey: row: {row} col: {col}");
 
                     tilePrey.transform.localScale = new Vector2(tileScale, tileScale);
-                    tilePrey.transform.position = new Vector2(posX, posY);
+                    tilePrey.transform.localPosition = new Vector2(posX, posY);
                     Prey pe = (Prey)entityGrid[row, col];
                     tilePrey.name = $"Prey({pe.getName()}) {posX} {posY}";
-                    tilePrey.layer = 10;
+                    PreyRenderer = tilePrey.GetComponent<SpriteRenderer>();
+                    PreyRenderer.sortingOrder = 1;
+                    //tilePrey.transform.parent = transform;
                 }
                 else if (t.Equals(typeof(Predator)))
                 {
                     GameObject tilePredator = (GameObject)Instantiate(referenceTilePredator, transform);
 
-                    float posX = row * tileSize;
-                    float posY = col * -tileSize;
+                    float posX = col * tileSize;
+                    float posY = row * -tileSize;
+                    Debug.Log($"tileSize at Predator: {tileSize}, posX: {posX}, posY: {posY}");
+
+                    Debug.Log($"Predator: row: {row} col: {col}");
 
                     tilePredator.transform.localScale = new Vector2(tileScale, tileScale);
-                    tilePredator.transform.position = new Vector2(posX, posY);
+                    tilePredator.transform.localPosition = new Vector2(posX, posY);
                     Predator pe = (Predator)entityGrid[row, col];
                     tilePredator.name = $"Predator({pe.getName()}) {posX} {posY}";
-                    tilePredator.layer = 10 ;
+                    PredatorRenderer = tilePredator.GetComponent<SpriteRenderer>();
+                    PredatorRenderer.sortingOrder = 1;
+                    //tilePredator.transform.parent = transform;
                 }
             }
         }
         Destroy(referenceTilePredator);
         Destroy(referenceTilePrey);
+
+        float gridW = cols * tileSize;
+        float gridH = rows * tileSize;
+        transform.position = new Vector2(-gridW / 2 + tileSize / 2, gridH / 2 - tileSize / 2);
     }
 
     private void GenerateEntities()
@@ -245,17 +261,13 @@ public class GridManager : MonoBehaviour
         }
         reader.Close();
 
-        int randx = 0;
-        int randy = 0;
-
         do
         {
             int random = UnityEngine.Random.Range(1, 3);
             int randomX = UnityEngine.Random.Range(0, rows);
             int randomY = UnityEngine.Random.Range(0, cols);
             Debug.Log($"randomX: {randomX}, randomY {randomY}");
-            randx = randomX;
-            randy = randomY;
+            
             if (grid[randomX, randomY] == "G")
             {
                 if (random == 1) //prey  float energyLevel, float foodLevel, float waterLevel, int maxOffsprings, float reproductionProb, int numOffsprings, float minReproductionEnergy, string name, int x, int y
@@ -304,137 +316,7 @@ public class GridManager : MonoBehaviour
             }
         } while (preyCount < minPreyCount || predatorCount < minPredatorCount || maxPreyCount > preyCount || maxPredatorCount > predatorCount);
 
-        //Type t = entityGrid[randx, randy].GetType();
-        //Debug.Log($"randx: {randx}, randy {randy}");
-        //if (t.Equals(typeof(Prey)))
-        //{
-        //    Prey p = (Prey) entityGrid[randx, randy];
-        //    Debug.Log("name: " + p.getName());
-        //    Debug.Log("water: " + p.getWaterLevel());
-        //    string[,] blockNeighbours = p.getBlockNeighbours(grid); //
-        //    for (int rows = 0; rows < blockNeighbours.GetLength(0); rows++)
-        //    {
-        //        for (int cols = 0; cols < blockNeighbours.GetLength(1); cols++)
-        //        {
-        //            if (blockNeighbours[rows, cols] != null)
-        //            {
-        //                Debug.Log($"Tile {blockNeighbours[rows, cols]} at {rows} {cols}");
-        //            }
-        //            else
-        //            {
-        //                Debug.Log($"getBlockNeighbours returned null");
-        //            }
-        //        }
-        //    }
-        //    object[,] entityNeighbours = p.getEntityNeighbours(entityGrid);
-        //    for (int rows = 0; rows < entityNeighbours.GetLength(0); rows++)
-        //    {
-        //        for (int cols = 0; cols < entityNeighbours.GetLength(1); cols++)
-        //        {
-        //            if (entityNeighbours[rows, cols] != null)
-        //            {
-        //                Type tp = entityNeighbours[rows, cols].GetType();
-        //                Prey pe = (Prey)entityNeighbours[rows, cols];
-        //                Debug.Log($"Tile {tp.ToString()} at {rows} {cols}. name: {pe.getName()}");
-        //            }
-        //            else
-        //            {
-        //                Debug.Log($"getBlockNeighbours returned null");
-        //            }
-        //        }
-        //    }
-        //}
-        //else if (t.Equals(typeof(Predator)))
-        //{
-        //    Predator pred = (Predator)entityGrid[randx, randy];
-        //    Debug.Log("name: " + pred.getName());
-        //    Debug.Log("water: " + pred.getWaterLevel());
-        //    string[,] blockNeighbours = pred.getBlockNeighbours(grid);
-        //    for (int rows = 0; rows < blockNeighbours.GetLength(0); rows++)
-        //    {
-        //        for (int cols = 0; cols < blockNeighbours.GetLength(1); cols++)
-        //        {
-        //            if (blockNeighbours[rows, cols] != null)
-        //            {
-        //                Debug.Log($"Tile {blockNeighbours[rows, cols]} at {rows} {cols}");
-        //            }
-        //            else
-        //            {
-        //                Debug.Log($"getBlockNeighbours returned null");
-        //            }
-
-        //        }
-        //    }
-        //    object[,] entityNeighbours = pred.getEntityNeighbours(entityGrid);
-        //    for (int rows = 0; rows < entityNeighbours.GetLength(0); rows++)
-        //    {
-        //        for (int cols = 0; cols < entityNeighbours.GetLength(1); cols++)
-        //        {
-        //            if (entityNeighbours[rows, cols] != null)
-        //            {
-        //                Type tp = entityNeighbours[rows, cols].GetType();
-        //                Predator pe = (Predator)entityNeighbours[rows, cols];
-        //                Debug.Log($"Tile {tp.ToString()} at {rows} {cols}. name: {pe.getName()}");
-        //            }
-        //            else
-        //            {
-        //                Debug.Log($"getBlockNeighbours returned null");
-        //            }
-
-        //        }
-        //    }
-        //}
-
-        //GameObject referenceTilePredator = (GameObject)Instantiate(Resources.Load("Predator"));
-        //GameObject referenceTilePrey = (GameObject)Instantiate(Resources.Load("Prey"));
-        //float tileScale = (float) 5 / rows;
-        //tileSize = tileScale;
-        //Type t;
-
-        //for (int row = 0; row < rows; row++)
-        //{
-        //    for (int col = 0; col < cols; col++)
-        //    {
-        //        if (entityGrid[row, col] != null)
-        //        {
-        //            t = entityGrid[row, col].GetType();
-        //        }
-        //        else
-        //        {
-        //            t = null;
-        //        }
-        //        if (t == null)
-        //        {
-        //            Debug.Log("t equals null");
-        //        }
-        //        else if (t.Equals(typeof(Prey)))
-        //        {
-        //            GameObject tilePrey = (GameObject)Instantiate(referenceTilePrey, transform);
-
-        //            float posX = row * tileSize;
-        //            float posY = col * -tileSize;
-
-        //            tilePrey.transform.localScale = new Vector2(tileScale, tileScale);
-        //            tilePrey.transform.position = new Vector2(posX, posY);
-        //            Prey pe = (Prey)entityGrid[row, col];
-        //            tilePrey.name = $"Prey({pe.getName()}) {posX} {posY}";
-        //        }
-        //        else if (t.Equals(typeof(Predator)))
-        //        {
-        //            GameObject tilePredator = (GameObject)Instantiate(referenceTilePredator, transform);
-
-        //            float posX = row * tileSize;
-        //            float posY = col * -tileSize;
-
-        //            tilePredator.transform.localScale = new Vector2(tileScale, tileScale);
-        //            tilePredator.transform.position = new Vector2(posX, posY);
-        //            Predator pe = (Predator)entityGrid[row, col];
-        //            tilePredator.name = $"Predator({pe.getName()}) {posX} {posY}";
-        //        }
-        //    }
-        //}
-        //Destroy(referenceTilePredator);
-        //Destroy(referenceTilePrey);
+        
 
         displayEntities();
 
