@@ -8,21 +8,25 @@ using UnityEngine.UI;
 
 public class AutoRunToggle : MonoBehaviour
 {
-    // Create a static instance of the script
-    private static AutoRunToggle instance;
     private Simulation sim;
+
+    private bool hasBeenClicked = false;
 
     void Awake()
     {
-        sim = gameObject.GetComponent<Simulation>();
-        // Set the static instance to the current instance of the script
-        instance = this;
+        //sim = gameObject.GetComponent<Simulation>();
     }
+
     public void autoRunToggle()
     {
-        sim.autoRun = !sim.autoRun;
-        Debug.Log($"AutoRun set to {sim.autoRun}");
+        if (!hasBeenClicked)
+        {
+            Simulation.autoRun = !Simulation.autoRun;
+            Debug.Log($"AutoRun set to {Simulation.autoRun}");
+            hasBeenClicked = true;
+        }
     }
+
     public void OnButtonClick()
     {
         autoRunToggle();

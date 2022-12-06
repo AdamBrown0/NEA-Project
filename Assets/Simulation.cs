@@ -12,7 +12,11 @@ namespace Assets
     public class Simulation : MonoBehaviour
     {
         private GameObject StepCounter;
-
+        public static bool autoRun;
+        private void Awake()
+        {
+            autoRun = false;
+        }
         void Start()
         {
             StepCounter = GameObject.Find("StepCounter");
@@ -21,7 +25,7 @@ namespace Assets
             StepCounter.transform.localPosition = new Vector2(-1f, -1f);
         }
         public int StepCount = 0;
-        public bool autoRun = false;
+        
         void Update()
         {
             // Check if the autoRun is on
