@@ -11,6 +11,9 @@ public class AutoRunToggle : MonoBehaviour
     private Simulation sim;
 
     private bool hasBeenClicked = false;
+    private int timesClicked = 0;
+
+    public int steps = 0;
 
     void Awake()
     {
@@ -19,16 +22,28 @@ public class AutoRunToggle : MonoBehaviour
 
     public void autoRunToggle()
     {
-        if (!hasBeenClicked)
+        Debug.Log($"timeClicked: {timesClicked}");
+        if (timesClicked % 2 == 0)
         {
-            Simulation.autoRun = !Simulation.autoRun;
-            Debug.Log($"AutoRun set to {Simulation.autoRun}");
-            hasBeenClicked = true;
+            //GUI.color = Color.clear;
+            //GetComponent<Image>().color = Color.clear;
         }
+        else
+        {
+            //GUI.color = new Color32(255, 142, 0, 100);
+            GetComponent<Image>().color = new Color32(255, 142, 0, 100);
+        }
+        Simulation.autoRun = !Simulation.autoRun;
+        Debug.Log($"AutoRun set to {Simulation.autoRun}");
+        timesClicked++;
     }
 
     public void OnButtonClick()
     {
         autoRunToggle();
+    }
+    private void Update()
+    {
+        steps = Simulation.StepCount;
     }
 }

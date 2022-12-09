@@ -24,7 +24,7 @@ namespace Assets
             StepCounter.transform.SetParent(GridManager.GridManagerTransform);
             StepCounter.transform.localPosition = new Vector2(-1f, -1f);
         }
-        public int StepCount = 0;
+        public static int StepCount = 0;
         
         void Update()
         {
