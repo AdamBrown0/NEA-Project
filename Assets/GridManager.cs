@@ -6,6 +6,7 @@ using System.IO;
 
 public class GridManager : MonoBehaviour
 {
+    public static bool superSecretSettings = false;
 
     public static int rows;
     public static int cols;
@@ -57,11 +58,22 @@ public class GridManager : MonoBehaviour
         //tileScale = (float)5 / (float) rows;
         //tileSize = tileScale;
 
-
+        GameObject referenceTileWater;
+        GameObject referenceTileGrass;
+        GameObject referenceTileBarrier;
         //reference Tiles for ease of access later on
-        GameObject referenceTileWater = (GameObject)Instantiate(Resources.Load("Water"));
-        GameObject referenceTileGrass = (GameObject)Instantiate(Resources.Load("Grass"));
-        GameObject referenceTileBarrier = (GameObject)Instantiate(Resources.Load("Barrier"));
+        if (superSecretSettings)
+        {
+            referenceTileWater = (GameObject)Instantiate(Resources.Load("AmongUsWater"));
+            referenceTileGrass = (GameObject)Instantiate(Resources.Load("AmongUsGrass"));
+            referenceTileBarrier = (GameObject)Instantiate(Resources.Load("AmongUsBarrier"));
+        }
+        else
+        {
+            referenceTileWater = (GameObject)Instantiate(Resources.Load("Water"));
+            referenceTileGrass = (GameObject)Instantiate(Resources.Load("Grass"));
+            referenceTileBarrier = (GameObject)Instantiate(Resources.Load("Barrier"));
+        }
 
         
 
@@ -176,8 +188,18 @@ public class GridManager : MonoBehaviour
 
     private void displayEntities()
     {
-        GameObject referenceTilePredator = (GameObject)Instantiate(Resources.Load("Predator"));
-        GameObject referenceTilePrey = (GameObject)Instantiate(Resources.Load("Prey"));
+        GameObject referenceTilePredator;
+        GameObject referenceTilePrey;
+        if (superSecretSettings)
+        {
+            referenceTilePredator = (GameObject)Instantiate(Resources.Load("AmongUsPredator"));
+            referenceTilePrey = (GameObject)Instantiate(Resources.Load("AmongUsPrey"));
+        }
+        else
+        {
+            referenceTilePredator = (GameObject)Instantiate(Resources.Load("Predator"));
+            referenceTilePrey = (GameObject)Instantiate(Resources.Load("Prey"));
+        }
         //tileScale = (float)5 / rows;
         //tileSize = tileScale;
         Debug.Log("tile SCale is: " + tileScale + "tile Size is: " + tileSize);

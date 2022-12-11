@@ -20,6 +20,7 @@ public class AutoRunToggle : MonoBehaviour
         else if (off)
         {
             Simulation.autoRun = false;
+            Simulation.isRunning = false;
         }
         else
         {
@@ -29,12 +30,24 @@ public class AutoRunToggle : MonoBehaviour
     }
     public void onButtonClicked()
     {
+        Button button = GameObject.Find("AutoRunOn").GetComponent<Button>();
+        button.enabled = false;
+        button.image.color = new Color32(0, 197, 18, 255);
+        Button buttonOff = GameObject.Find("AutoRunOff").GetComponent<Button>();
+        buttonOff.enabled = true;
+        buttonOff.image.color = Color.clear;
         on = true;
         off = false;
         autoRunToggle();
     }
     public void offButtonClicked()
     {
+        Button button = GameObject.Find("AutoRunOff").GetComponent<Button>();
+        button.enabled = false;
+        button.image.color = new Color32(255, 38, 0, 255);
+        Button buttonOn = GameObject.Find("AutoRunOn").GetComponent<Button>();
+        buttonOn.enabled = true;
+        buttonOn.image.color = Color.clear;
         on = false;
         off = true;
         autoRunToggle();

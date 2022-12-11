@@ -11,28 +11,28 @@ namespace Assets
 {
     public class Simulation : MonoBehaviour
     {
-        private GameObject StepCounter;
+        private static Text StepCounterText;
         public static bool autoRun;
+        public static int StepCount = 0;
+        public static float stepDelay = 5f;
+        public static bool isRunning = false;
+
         private void Awake()
         {
             autoRun = false;
         }
         void Start()
         {
-            StepCounter = GameObject.Find("StepCounter");
-            StepCounter.SetActive(true);
-            StepCounter.transform.SetParent(GridManager.GridManagerTransform);
-            StepCounter.transform.localPosition = new Vector2(-1f, -1f);
+            StepCounterText = GameObject.Find("StepCounterText").GetComponent<Text>();
         }
-        public static int StepCount = 0;
         
         void Update()
         {
-            // Check if the autoRun is on
-            if (autoRun)
+            if (autoRun && !isRunning)
             {
-                // Start the Coroutine
-                StartCoroutine(AutoRunSimulation(0.5f));
+                isRunning = true;
+                stepDelay = stepDelay;
+                StartCoroutine(AutoRunSimulation(stepDelay));
             }
             
         }
@@ -48,10 +48,10 @@ namespace Assets
                 yield return new WaitForSeconds(stepDelay);
             }
         }
-        public void StepSimulation()
+        public static void StepSimulation()
         {
             StepCount++;
-            StepCounter.GetComponent<Text>().text = $"Step: {StepCount.ToString()}";
+            StepCounterText.GetComponent<Text>().text = $"Simulation Step: {StepCount.ToString()}";
         }
     }
 }
