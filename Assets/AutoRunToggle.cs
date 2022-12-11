@@ -8,42 +8,35 @@ using UnityEngine.UI;
 
 public class AutoRunToggle : MonoBehaviour
 {
-    private Simulation sim;
+    private bool on = false;
+    private bool off = true;
 
-    private bool hasBeenClicked = false;
-    private int timesClicked = 0;
-
-    public int steps = 0;
-
-    void Awake()
+    private void autoRunToggle()
     {
-        //sim = gameObject.GetComponent<Simulation>();
-    }
-
-    public void autoRunToggle()
-    {
-        Debug.Log($"timeClicked: {timesClicked}");
-        if (timesClicked % 2 == 0)
+        if (on)
         {
-            //GUI.color = Color.clear;
-            //GetComponent<Image>().color = Color.clear;
+            Simulation.autoRun = true;
+        }
+        else if (off)
+        {
+            Simulation.autoRun = false;
         }
         else
         {
-            //GUI.color = new Color32(255, 142, 0, 100);
-            GetComponent<Image>().color = new Color32(255, 142, 0, 100);
+            Debug.Log($"Error at autoRunToggle(), on: {on} off: {off}");
         }
-        Simulation.autoRun = !Simulation.autoRun;
         Debug.Log($"AutoRun set to {Simulation.autoRun}");
-        timesClicked++;
     }
-
-    public void OnButtonClick()
+    public void onButtonClicked()
     {
+        on = true;
+        off = false;
         autoRunToggle();
     }
-    private void Update()
+    public void offButtonClicked()
     {
-        steps = Simulation.StepCount;
+        on = false;
+        off = true;
+        autoRunToggle();
     }
 }
