@@ -58,7 +58,7 @@ namespace Assets
 
         //<array>.GetLength(x) where x is the dimension: 0 for rows, 1 for columns
 
-        private string[,] createBlockGridBigArray(string[,] blockGrid)
+        public string[,] createBlockGridBigArray(string[,] blockGrid)
         {
             string[,] bigArray = new string[blockGrid.GetLength(0) + 2, blockGrid.GetLength(1) + 2];
             for (int rows = 0; rows < bigArray.GetLength(0); rows++)
@@ -103,32 +103,35 @@ namespace Assets
             //    Debug.Log($"TEST: {s}");
             //}
 
-            //for (int i = 0; i < 9; i++)
-            //{
-            //    Debug.Log($"Y: {x + rowsarr[i]} {x}, X: {y + colsarr[i]} {y}. NAME: {name}");
-            //    neighbours[xB, yB] = bigArray[x + 1 + rowsarr[i], y + 1 + colsarr[i]]; //
-            //    if (i == 2 || i == 5)
-            //    {
-            //        xB = 0;
-            //        yB += 1;
-            //        Debug.Log($"x: {xB} y: {yB}");
-            //    }
-            //    else
-            //    {
-            //        xB += 1;
-            //        Debug.Log($"x: {xB} y: {yB}");
-            //    }
-            //}
-
-            int count = 0;
-            for (int rowsBlock = 0; rowsBlock < neighbours.GetLength(0); rowsBlock++)
+            for (int i = 0; i < 9; i++)
             {
-                for (int colsBlock = 0; colsBlock < neighbours.GetLength(1); colsBlock++)
+                Debug.Log($"Y: {x + rowsarr[i]} {x}, X: {y + colsarr[i]} {y}. NAME: {name}");
+                neighbours[xB, yB] = bigArray[x + 1 + rowsarr[i], y + 1 + colsarr[i]]; //
+                if (i == 2 || i == 5)
                 {
-                    neighbours[rowsBlock, colsBlock] = bigArray[x + rowsarr[count], y + colsarr[count]];
-                    count++;
+                    xB = 0;
+                    yB += 1;
+                    Debug.Log($"x: {xB} y: {yB}");
+                }
+                else
+                {
+                    xB += 1;
+                    Debug.Log($"x: {xB} y: {yB}");
                 }
             }
+
+            //int count = 0;
+            //for (int rowsBlock = 0; rowsBlock < neighbours.GetLength(0); rowsBlock++)
+            //{
+            //    for (int colsBlock = 0; colsBlock < neighbours.GetLength(1); colsBlock++)
+            //    {
+            //        neighbours[rowsBlock, colsBlock] = bigArray[x + rowsarr[count], y + colsarr[count]];
+            //        if (count < 9)
+            //        {
+            //            count++;
+            //        }
+            //    }
+            //}
 
             for (int cols = 0; cols < neighbours.GetLength(0); cols++)
             {

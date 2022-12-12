@@ -11,6 +11,7 @@ namespace Assets
 {
     public class Simulation : MonoBehaviour
     {
+        
         private static Text StepCounterText;
         public static bool autoRun;
         [SerializeField] public static int StepCount;
@@ -57,12 +58,14 @@ namespace Assets
         {
             //get newEntityGrid after moves
             entityGrid = SimulationStuff.MainSimulation.moveEntities(grid, entityGrid);
+            
 
             //display changes
             GameObject gridManagerObject = GameObject.Find("GridHolder");
             GridManager gridManager = gridManagerObject.GetComponent<GridManager>();
-            //gridManager.destroyCurrentEntities(entityGrid);
+            gridManager.entityGrid = entityGrid;
             gridManager.displayEntities(entityGrid);
+            gridManager.displayEntitesOnConsole(entityGrid);
         }
     }
 }

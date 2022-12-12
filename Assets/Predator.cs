@@ -8,7 +8,7 @@ using System;
 internal class Predator : Entity
     {
         //set predator entity to predetermined values
-        public Predator(float energyLevel, float foodLevel, float waterLevel, int maxOffsprings, float reproductionProb, int numOffsprings, float minReproductionEnergy, string name, int x, int y)
+        public Predator(float energyLevel, float foodLevel, float waterLevel, int maxOffsprings, int reproductionProb, int numOffsprings, float minReproductionEnergy, string name, int x, int y)
         {
             this.energyLevel = energyLevel;
             this.foodLevel = foodLevel;

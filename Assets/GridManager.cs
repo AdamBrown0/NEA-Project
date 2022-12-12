@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 
 public class GridManager : MonoBehaviour
 {
@@ -17,7 +18,7 @@ public class GridManager : MonoBehaviour
 
 
     private string[,] grid = new string[rows, cols];
-    private object[,] entityGrid = new object[rows, cols];
+    public object[,] entityGrid = new object[rows, cols];
     private GameObject[,] gameObjectGrid = new GameObject[rows, cols];
 
 
@@ -28,6 +29,9 @@ public class GridManager : MonoBehaviour
     SpriteRenderer PredatorRenderer;
 
     public static Transform GridManagerTransform;
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    static extern bool AllocConsole();  
 
     // Start is called before the first frame update
     void Start()
@@ -191,17 +195,32 @@ public class GridManager : MonoBehaviour
         transform.position = new Vector2(-gridW / 2 + tileSize / 2, gridH / 2 - tileSize / 2);
     }
 
-    public void convertEntityGridToGameObject(object[,] entityGridD)
+    public void displayEntitesOnConsole(object[,] entityGridD)
     {
-        for (int rows = 0; rows < entityGrid.GetLength(0); rows++)
+        AllocConsole();
+
+        for (int row = 0; row < entityGridD.GetLength(0); row++)
         {
-            for (int cols = 0; cols < entityGrid.GetLength(1); cols++)
+            for (int col = 0; col < entityGridD.GetLength(1); col++)
             {
                 Type t;
-                if (entityGridD[rows, cols] != null)
+                if (entityGridD[row, col] != null)
                 {
-                    t = entityGridD[rows, cols].GetType();
-
+                    t = entityGridD[row, col].GetType();
+                    if (t == typeof(Prey))
+                    {
+                        Prey prey = (Prey)entityGridD[row, col];
+                        Console.Write($" Prey: {prey.getName()} ");
+                    }
+                    else if (t == typeof(Predator))
+                    {
+                        Predator predator = (Predator)entityGridD[row, col];
+                        Console.Write($" Predator: {predator.getName()} ");
+                    }
+                    else
+                    {
+                        Console.Write("   ");
+                    }
                 }
                 
             }
@@ -380,11 +399,5 @@ public class GridManager : MonoBehaviour
 
         displayEntities(entityGrid);
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        //StartCoroutine(moveDot());
     }
 }

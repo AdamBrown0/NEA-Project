@@ -16,47 +16,47 @@ namespace Assets.SimulationStuff
             switch (x)
             {
                 case 0:
-                    move[0] = -1;
+                    move[1] = -1;
                     switch (y)
                     {
                         case 0:
-                            move[1] = -1;
+                            move[0] = -1;
                             break;
                         case 1:
-                            move[1] = 0;
+                            move[0] = 0;
                             break;
                         case 2:
-                            move[1] = 1;
+                            move[0] = 1;
                             break;
                     }
                     break;
                 case 1:
-                    move[0] = 0;
+                    move[1] = 0;
                     switch (y)
                     {
                         case 0:
-                            move[1] = -1;
+                            move[0] = -1;
                             break;
                         case 1:
-                            move[1] = 0;
+                            move[0] = 0;
                             break;
                         case 2:
-                            move[1] = 1;
+                            move[0] = 1;
                             break;
                     }
                     break;
                 case 2:
-                    move[0] = 1;
+                    move[1] = 1;
                     switch (y)
                     {
                         case 0:
-                            move[1] = -1;
+                            move[0] = -1;
                             break;
                         case 1:
-                            move[1] = 0;
+                            move[0] = 0;
                             break;
                         case 2:
-                            move[1] = 1;
+                            move[0] = 1;
                             break;
                     }
                     break;
@@ -64,13 +64,15 @@ namespace Assets.SimulationStuff
                     Debug.Log($"howToMove gone wrong, MOVE: {move[0]}, {move[1]}");
                     break;
             }
-            Debug.Log($"RETURN: {move[1]}, {move[0]}");
+            //Debug.Log($"RETURN: {move[1]}, {move[0]}");
             return move;
         }
 
         public static object[,] moveEntities(string[,] grid, object[,] entityGrid) //move entities by move distance, grid and entityGrid passed to make possible
         {
             object[,] newEntityGrid = new object[entityGrid.GetLength(0), entityGrid.GetLength(1)]; //this is needed to stop the for loop detecting moved entities and causing infinite loop
+            Prey tempPrey = new Prey();
+            string[,] bigBlockArray = tempPrey.createBlockGridBigArray(grid);
 
             //looping through to find an entity, if entity found will move to a valid space according to grid
             for (int rows = 0; rows < entityGrid.GetLength(0); rows++) //GetLength(0) for rows
@@ -107,7 +109,7 @@ namespace Assets.SimulationStuff
                             {
                                 int randomX = UnityEngine.Random.Range(0, blockNeighbours.GetLength(0));
                                 int randomY = UnityEngine.Random.Range(0, blockNeighbours.GetLength(1));
-                                if (blockNeighbours[randomX, randomY] == "G") //checks if random spot is Grass (G) block
+                                if (blockNeighbours[randomX, randomY] == "G" && bigBlockArray[rows + howToMove(randomX, randomY)[0], cols + howToMove(randomX, randomY)[1]] == "G") //checks if random spot is Grass (G) block
                                 {
                                     if (entityNeighbours[randomX, randomY] == null) //if block is Grass, then check if block is not currently occupied by another entity
                                     {
@@ -141,7 +143,7 @@ namespace Assets.SimulationStuff
                                 {
                                     for (int colsBackup = 0; colsBackup < blockNeighbours.GetLength(1); colsBackup++)
                                     {
-                                        if (blockNeighbours[rowsBackup, colsBackup] == "G")
+                                        if (blockNeighbours[rowsBackup, colsBackup] == "G" && bigBlockArray[rowsBackup + howToMove(rowsBackup, colsBackup)[0], colsBackup + howToMove(rowsBackup, colsBackup)[1]] == "G")
                                         {
                                             if (entityNeighbours[rowsBackup, colsBackup] == null)
                                             {
@@ -151,7 +153,7 @@ namespace Assets.SimulationStuff
                                                     newEntityGrid[rowsBackup + howToMove(rowsBackup, colsBackup)[0], colsBackup + howToMove(rowsBackup, colsBackup)[1]] = prey;
                                                     Debug.Log($"Prey moved to {rowsBackup + howToMove(rowsBackup, colsBackup)[0]}, {colsBackup + howToMove(rowsBackup, colsBackup)[1]}\nRelied on fall back option\n Tile was {blockNeighbours[rowsBackup , colsBackup]}");
                                                     done = true;
-                                                    break;
+                                                    goto outsideFallBack;
                                                 }
                                                 catch (Exception ex)
                                                 {
@@ -175,6 +177,8 @@ namespace Assets.SimulationStuff
                                 Debug.Log($"Skipped fall back option");
                             }
 
+                            outsideFallBack:;
+                            goto outsideTypeStatement;
                         }
                         else if (t == typeof(Predator)) //if type prey, prey cannot eat predators, so will only move to grass blocks
                         {
@@ -192,7 +196,6 @@ namespace Assets.SimulationStuff
                                 {
                                     Debug.Log($"EntityNeighbours: {obj}");
                                 }
-                                Debug.Break();
                             }
                             else
                             {
@@ -207,7 +210,7 @@ namespace Assets.SimulationStuff
                             {
                                 int randomX = UnityEngine.Random.Range(0, blockNeighbours.GetLength(0));
                                 int randomY = UnityEngine.Random.Range(0, blockNeighbours.GetLength(1));
-                                if (blockNeighbours[randomX, randomY] == "G") //checks if random spot is Grass (G) block
+                                if (blockNeighbours[randomX, randomY] == "G" && bigBlockArray[rows + howToMove(randomX, randomY)[0], cols + howToMove(randomX, randomY)[1]] == "G") //checks if random spot is Grass (G) block
                                 {
                                     Type typePred;
                                     if (entityNeighbours[randomX, randomY] != null)
@@ -262,7 +265,7 @@ namespace Assets.SimulationStuff
                                 {
                                     for (int colsBackup = 0; colsBackup < blockNeighbours.GetLength(1); colsBackup++)
                                     {
-                                        if (blockNeighbours[rowsBackup, colsBackup] == "G")
+                                        if (blockNeighbours[rowsBackup, colsBackup] == "G" && bigBlockArray[rowsBackup + howToMove(rowsBackup, colsBackup)[0], colsBackup + howToMove(rowsBackup, colsBackup)[1]] == "G")
                                         {
                                             if (entityNeighbours[rowsBackup, colsBackup] == null)
                                             {
@@ -274,7 +277,7 @@ namespace Assets.SimulationStuff
                                                     newEntityGrid[rowsBackup + howToMove(rowsBackup, colsBackup)[0], colsBackup + howToMove(rowsBackup, colsBackup)[1]] = predator;
                                                     Debug.Log($"Predator moved to {rowsBackup + howToMove(rowsBackup, colsBackup)[0]}, {colsBackup + howToMove(rowsBackup, colsBackup)[1]}\nRelied on fall back option\nTile is {blockNeighbours[rowsBackup, colsBackup]}");
                                                     done = true;
-                                                    break;
+                                                    goto outsideFallBack;
                                                 }
                                                 catch (Exception ex)
                                                 {
@@ -297,11 +300,17 @@ namespace Assets.SimulationStuff
                             {
                                 Debug.Log($"Skipped fall back option");
                             }
+
+                            outsideFallBack:;
+                            goto outsideTypeStatement;
                         }
                         else
                         {
                             Debug.Log($"No Entity to Move");
                         }
+
+                        outsideTypeStatement:;
+
                     }
                     else
                     {
@@ -371,6 +380,8 @@ namespace Assets.SimulationStuff
                     }
                 }
             }
+
+            return entityGrid;
         }
 
     }
