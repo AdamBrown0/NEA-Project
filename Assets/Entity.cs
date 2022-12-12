@@ -14,7 +14,7 @@ namespace Assets
 
         //breeding related variables
         protected int maxOffsprings;
-        protected float reproductionProb;
+        protected int reproductionProb;
         protected int numOffsprings;
         protected float minReproductionEnergy;
 
@@ -31,7 +31,7 @@ namespace Assets
 
         public int getMaxOffsprings() { return maxOffsprings; }
 
-        public float getReproductionProb() { return reproductionProb; }
+        public int getReproductionProb() { return reproductionProb; }
 
         public int getNumOffsprings() { return numOffsprings; }
 
@@ -44,6 +44,10 @@ namespace Assets
         public string getName() { return name; }
 
         public int[] getPos() { return new int[2] { x, y }; }
+
+        public void updateNumOffSprings(int value) { numOffsprings += value; }
+
+        public void updateEnergy(float value) { energyLevel = value; }
 
 
         /* create 3x3 array for both entities and blocks
@@ -74,7 +78,7 @@ namespace Assets
                     }
                     else
                     {
-                        Debug.Log($"Placed {blockGrid[rows - 1, cols - 1]} at row: {rows} col: {cols}");
+                        Debug.Log($"Placed {blockGrid[rows - 1, cols - 1]} at row: {rows} col: {cols} in BIGBLOCKARRAY.");
                         bigArray[rows, cols] = blockGrid[rows - 1, cols - 1];
                     }
                 }
@@ -92,20 +96,37 @@ namespace Assets
 
             int yB = 0;
             int xB = 0;
-            for (int i = 0; i < 9; i++)
+
+            //Debug.Log($"SIZE: {bigArray.GetLength(0)}, {bigArray.GetLength(1)}");
+            //foreach (string s in bigArray)
+            //{
+            //    Debug.Log($"TEST: {s}");
+            //}
+
+            //for (int i = 0; i < 9; i++)
+            //{
+            //    Debug.Log($"Y: {x + rowsarr[i]} {x}, X: {y + colsarr[i]} {y}. NAME: {name}");
+            //    neighbours[xB, yB] = bigArray[x + 1 + rowsarr[i], y + 1 + colsarr[i]]; //
+            //    if (i == 2 || i == 5)
+            //    {
+            //        xB = 0;
+            //        yB += 1;
+            //        Debug.Log($"x: {xB} y: {yB}");
+            //    }
+            //    else
+            //    {
+            //        xB += 1;
+            //        Debug.Log($"x: {xB} y: {yB}");
+            //    }
+            //}
+
+            int count = 0;
+            for (int rowsBlock = 0; rowsBlock < neighbours.GetLength(0); rowsBlock++)
             {
-                
-                neighbours[xB, yB] = bigArray[y + rowsarr[i], x + colsarr[i]]; //
-                if (i == 2 || i == 5)
+                for (int colsBlock = 0; colsBlock < neighbours.GetLength(1); colsBlock++)
                 {
-                    xB = 0;
-                    yB += 1;
-                    //Debug.Log($"x: {xB} y: {yB}");
-                }
-                else
-                {
-                    xB += 1;
-                    //Debug.Log($"x: {xB} y: {yB}");
+                    neighbours[rowsBlock, colsBlock] = bigArray[x + rowsarr[count], y + colsarr[count]];
+                    count++;
                 }
             }
 
@@ -113,7 +134,7 @@ namespace Assets
             {
                 for (int rows = 0; rows < neighbours.GetLength(1); rows++)
                 {
-                    Debug.Log($"Tile {neighbours[cols, rows]} at row: {rows} col: {cols}");
+                    Debug.Log($"Tile {neighbours[cols, rows]} at row: {rows} col: {cols} GETBLOCKNEIGHBOURS:");
                 }
             }
 
@@ -143,7 +164,7 @@ namespace Assets
                         if (entityGrid[rows - 1, cols - 1] != null)
                         {
                             Type t = entityGrid[rows - 1, cols - 1].GetType();
-                            Debug.Log($"Placed {t.ToString()} at row: {rows} col: {cols}");
+                            Debug.Log($"Placed {t.ToString()} at row: {rows} col: {cols} in BIGENTITYARRAY");
                         }
                         else
                         {
@@ -170,7 +191,7 @@ namespace Assets
             for (int i = 0; i < 9; i++)
             {
 
-                neighbours[xB, yB] = bigArray[y + rowsarr[i], x + colsarr[i]];
+                neighbours[xB, yB] = bigArray[x + 1 + rowsarr[i], y + 1 + colsarr[i]];
                 if (i == 2 || i == 5)
                 {
                     xB = 0;

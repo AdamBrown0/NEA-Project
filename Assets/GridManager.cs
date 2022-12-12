@@ -18,6 +18,7 @@ public class GridManager : MonoBehaviour
 
     private string[,] grid = new string[rows, cols];
     private object[,] entityGrid = new object[rows, cols];
+    private GameObject[,] gameObjectGrid = new GameObject[rows, cols];
 
 
     private float tileSize = 1f;
@@ -39,6 +40,10 @@ public class GridManager : MonoBehaviour
         GenerateGrid();
         GenerateEntities();
         GridManagerTransform = transform;
+
+        //giving Simulation class access to both grids
+        Assets.Simulation.grid = grid;
+        Assets.Simulation.entityGrid = entityGrid;
     }
 
     private void GenerateGrid()
@@ -186,8 +191,39 @@ public class GridManager : MonoBehaviour
         transform.position = new Vector2(-gridW / 2 + tileSize / 2, gridH / 2 - tileSize / 2);
     }
 
-    private void displayEntities()
+    public void convertEntityGridToGameObject(object[,] entityGridD)
     {
+        for (int rows = 0; rows < entityGrid.GetLength(0); rows++)
+        {
+            for (int cols = 0; cols < entityGrid.GetLength(1); cols++)
+            {
+                Type t;
+                if (entityGridD[rows, cols] != null)
+                {
+                    t = entityGridD[rows, cols].GetType();
+
+                }
+                
+            }
+        }
+    }
+
+    public GameObject[,] destroyCurrentEntities(GameObject[,] gameObjectGridD)
+    {
+        for (int row = 0; row < rows; row++)
+        {
+            for (int col = 0; col < cols; col++)
+            {
+                Destroy(gameObjectGridD[row, col]);
+                gameObjectGridD[row, col] = null;
+            }
+        }
+        return gameObjectGridD;
+    }
+
+    public void displayEntities(object[,] entityGridD)
+    {
+        gameObjectGrid = destroyCurrentEntities(gameObjectGrid);
         GameObject referenceTilePredator;
         GameObject referenceTilePrey;
         if (superSecretSettings)
@@ -209,9 +245,9 @@ public class GridManager : MonoBehaviour
             {
                 
                 Type t;
-                if (entityGrid[row, col] != null)
+                if (entityGridD[row, col] != null)
                 {
-                    t = entityGrid[row, col].GetType();
+                    t = entityGridD[row, col].GetType();
                     Debug.Log($"t equals {t} at row: {row} col: {col}");
                 }
                 else
@@ -234,10 +270,11 @@ public class GridManager : MonoBehaviour
 
                     tilePrey.transform.localScale = new Vector2(tileScale, tileScale);
                     tilePrey.transform.localPosition = new Vector2(posX, posY);
-                    Prey pe = (Prey)entityGrid[row, col];
+                    Prey pe = (Prey)entityGridD[row, col];
                     tilePrey.name = $"Prey({pe.getName()}) {posX} {posY}";
                     PreyRenderer = tilePrey.GetComponent<SpriteRenderer>();
                     PreyRenderer.sortingOrder = 1;
+                    gameObjectGrid[row, col] = tilePrey;
                     //tilePrey.transform.parent = transform;
                 }
                 else if (t.Equals(typeof(Predator)))
@@ -252,10 +289,11 @@ public class GridManager : MonoBehaviour
 
                     tilePredator.transform.localScale = new Vector2(tileScale, tileScale);
                     tilePredator.transform.localPosition = new Vector2(posX, posY);
-                    Predator pe = (Predator)entityGrid[row, col];
+                    Predator pe = (Predator)entityGridD[row, col];
                     tilePredator.name = $"Predator({pe.getName()}) {posX} {posY}";
                     PredatorRenderer = tilePredator.GetComponent<SpriteRenderer>();
                     PredatorRenderer.sortingOrder = 1;
+                    gameObjectGrid[row, col] = tilePredator;
                     //tilePredator.transform.parent = transform;
                 }
             }
@@ -268,14 +306,14 @@ public class GridManager : MonoBehaviour
         transform.position = new Vector2(-gridW / 2 + tileSize / 2, gridH / 2 - tileSize / 2);
     }
 
+    public static List<string> names = new List<string>();
     private void GenerateEntities()
     {
         int preyCount = 0;
         int predatorCount = 0;
-        List<string> names = new List<string>();
 
         string path = "Assets/Resources/names.txt";
-        //Read the text from directly from the test.txt file
+        //Read the text from directly from the names.txt file
         StreamReader reader = new StreamReader(path);
         while (!reader.EndOfStream)
         {
@@ -298,7 +336,7 @@ public class GridManager : MonoBehaviour
                     float foodLevel = UnityEngine.Random.Range(5f, 10f);
                     float waterLevel = UnityEngine.Random.Range(5f, 10f);
                     int maxOffsprings = UnityEngine.Random.Range(0, 6);
-                    float reproductionProb = UnityEngine.Random.Range(0f, 100f);
+                    int reproductionProb = UnityEngine.Random.Range(0, 100);
                     int numOffsprings = 0;
                     float minReproductionEnergy = UnityEngine.Random.Range(2f, 10f);
                     string name = names[UnityEngine.Random.Range(0, names.Count + 1)];
@@ -315,7 +353,7 @@ public class GridManager : MonoBehaviour
                     float foodLevel = UnityEngine.Random.Range(5f, 10f);
                     float waterLevel = UnityEngine.Random.Range(5f, 10f);
                     int maxOffsprings = UnityEngine.Random.Range(0, 6);
-                    float reproductionProb = UnityEngine.Random.Range(0f, 100f);
+                    int reproductionProb = UnityEngine.Random.Range(0, 100);
                     int numOffsprings = 0;
                     float minReproductionEnergy = UnityEngine.Random.Range(2f, 10f);
                     string name = names[UnityEngine.Random.Range(0, names.Count + 1)];
@@ -340,7 +378,7 @@ public class GridManager : MonoBehaviour
 
         
 
-        displayEntities();
+        displayEntities(entityGrid);
 
     }
 

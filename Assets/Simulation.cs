@@ -13,9 +13,12 @@ namespace Assets
     {
         private static Text StepCounterText;
         public static bool autoRun;
-        public static int StepCount = 0;
+        [SerializeField] public static int StepCount;
         public static float stepDelay = 5f;
         public static bool isRunning = false;
+
+        public static string[,] grid;
+        public static object[,] entityGrid;
 
         private void Awake()
         {
@@ -28,10 +31,10 @@ namespace Assets
         
         void Update()
         {
-            if (autoRun && !isRunning)
+            if (autoRun && !isRunning) //!isRunning stops the coroutine from starting again if already running.
             {
                 isRunning = true;
-                stepDelay = stepDelay;
+                stepDelay = stepDelay; //to try update stepDelay if InputField changes it. 
                 StartCoroutine(AutoRunSimulation(stepDelay));
             }
             
@@ -43,6 +46,8 @@ namespace Assets
             {
                 // Run the simulation code here
                 StepSimulation();
+                StepCount++;
+                StepCounterText.GetComponent<Text>().text = $"Simulation Step: {StepCount.ToString()}";
 
                 // Wait for the set amount of time before running the next iteration
                 yield return new WaitForSeconds(stepDelay);
@@ -50,8 +55,14 @@ namespace Assets
         }
         public static void StepSimulation()
         {
-            StepCount++;
-            StepCounterText.GetComponent<Text>().text = $"Simulation Step: {StepCount.ToString()}";
+            //get newEntityGrid after moves
+            entityGrid = SimulationStuff.MainSimulation.moveEntities(grid, entityGrid);
+
+            //display changes
+            GameObject gridManagerObject = GameObject.Find("GridHolder");
+            GridManager gridManager = gridManagerObject.GetComponent<GridManager>();
+            //gridManager.destroyCurrentEntities(entityGrid);
+            gridManager.displayEntities(entityGrid);
         }
     }
 }
