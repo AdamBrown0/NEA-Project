@@ -110,12 +110,18 @@ namespace Assets.SimulationStuff
                             int count = 0;
                             while (!done && count < 8)
                             {
+
                                 Debug.Log($"DONE: {done} COUNT: {count}");
                                 int randomX = UnityEngine.Random.Range(0, blockNeighbours.GetLength(0));
                                 int randomY = UnityEngine.Random.Range(0, blockNeighbours.GetLength(1));
-                                if (blockNeighbours[randomX, randomY] == "G" && bigBlockArray[prey.getPos()[0] + howToMove(randomX, randomY)[0] + 1, prey.getPos()[1] + howToMove(randomX, randomY)[1] + 1] == "G") //checks if random spot is Grass (G) block
+
+                                //debugBlockNeighbours:;
+                                //Debug.Log($"Block Neighbours PREY while: {blockNeighbours[randomX, randomY]}, rows: {randomX} cols: {randomY}");
+                                //goto debugBlockNeighbours;
+
+                                if (blockNeighbours[randomX, randomY] == "G" && bigBlockArray[prey.getPos()[1] + howToMove(randomX, randomY)[0] + 1, prey.getPos()[0] + howToMove(randomX, randomY)[1] + 1] == "G") //checks if random spot is Grass (G) block
                                 {
-                                    Debug.Log($"BBBB: {blockNeighbours[randomX, randomY]} GGGG: {grid[prey.getPos()[0], prey.getPos()[1]]} at PREY WHILE\nRANDOMX: {randomX}, RANDOMY: {randomY}");
+                                    Debug.Log($"BLOCK: {blockNeighbours[randomX, randomY]} GRID: {grid[prey.getPos()[0], prey.getPos()[1]]} at PREY WHILE\nRANDOMX: {randomX}, RANDOMY: {randomY}");
                                     if (entityNeighbours[randomX, randomY] == null) //if block is Grass, then check if block is not currently occupied by another entity
                                     {
                                         //move prey to new location and delete old
@@ -149,9 +155,13 @@ namespace Assets.SimulationStuff
                                 {
                                     for (int colsBackup = 0; colsBackup < blockNeighbours.GetLength(1); colsBackup++)
                                     {
-                                        if (blockNeighbours[rowsBackup, colsBackup] == "G" && bigBlockArray[prey.getPos()[0] + howToMove(rowsBackup, colsBackup)[0] + 1, prey.getPos()[1] + howToMove(rowsBackup, colsBackup)[1] + 1] == "G")
+                                        //debugBlockNeighbours:;
+                                        //Debug.Log($"Block Neighbours PREY fall back: {blockNeighbours[rowsBackup, colsBackup]}, rows: {rowsBackup} cols: {colsBackup}");
+                                        //goto debugBlockNeighbours;
+
+                                        if (blockNeighbours[rowsBackup, colsBackup] == "G" && bigBlockArray[prey.getPos()[1] + howToMove(rowsBackup, colsBackup)[0] + 1, prey.getPos()[0] + howToMove(rowsBackup, colsBackup)[1] + 1] == "G")
                                         {
-                                            Debug.Log($"BBBB: {blockNeighbours[rowsBackup, colsBackup]} GGGG: {grid[prey.getPos()[0], prey.getPos()[1]]} at PREY FALL BACK");
+                                            Debug.Log($"BLOCK: {blockNeighbours[rowsBackup, colsBackup]} GRID: {grid[prey.getPos()[0], prey.getPos()[1]]} at PREY FALL BACK");
                                             if (entityNeighbours[rowsBackup, colsBackup] == null)
                                             {
                                                 //move prey to new location and delete old
@@ -218,9 +228,13 @@ namespace Assets.SimulationStuff
                                 Debug.Log($"DONE: {done} COUNT: {count}");
                                 int randomX = UnityEngine.Random.Range(0, blockNeighbours.GetLength(0));
                                 int randomY = UnityEngine.Random.Range(0, blockNeighbours.GetLength(1));
-                                if (blockNeighbours[randomX, randomY] == "G" && bigBlockArray[predator.getPos()[0] + howToMove(randomX, randomY)[0] + 1, predator.getPos()[1] + howToMove(randomX, randomY)[1] + 1] == "G") //checks if random spot is Grass (G) block
+                                if (blockNeighbours[randomX, randomY] == "G" && bigBlockArray[predator.getPos()[1] + howToMove(randomX, randomY)[0] + 1, predator.getPos()[0] + howToMove(randomX, randomY)[1] + 1] == "G") //checks if random spot is Grass (G) block
                                 {
-                                    Debug.Log($"BBBB: {blockNeighbours[randomX, randomY]} GGGG: {grid[predator.getPos()[0], predator.getPos()[1]]} at PREDATOR WHILE\nRANDOMX: {randomX}, RANDOMY: {randomY}");
+                                    //debugBlockNeighbours:;
+                                    //Debug.Log($"Block Neighbours PREDATOR while: {blockNeighbours[randomX, randomY]}, rows: {randomX} cols: {randomY}");
+                                    //goto debugBlockNeighbours;
+
+                                    Debug.Log($"BLOCK: {blockNeighbours[randomX, randomY]} GRID: {grid[predator.getPos()[0], predator.getPos()[1]]} at PREDATOR WHILE\nRANDOMX: {randomX}, RANDOMY: {randomY}");
                                     if (entityNeighbours[randomX, randomY] != null)
                                     {
                                         try
@@ -282,9 +296,13 @@ namespace Assets.SimulationStuff
                                 {
                                     for (int colsBackup = 0; colsBackup < blockNeighbours.GetLength(1); colsBackup++)
                                     {
-                                        if (blockNeighbours[rowsBackup, colsBackup] == "G" && bigBlockArray[predator.getPos()[0] + howToMove(rowsBackup, colsBackup)[0] + 1, predator.getPos()[1] + howToMove(rowsBackup, colsBackup)[1] + 1] == "G")
+                                        //debugBlockNeighbours:;
+                                        //Debug.Log($"Block Neighbours PREDATOR fall back: {blockNeighbours[rowsBackup, colsBackup]}, rows: {rowsBackup} cols: {colsBackup}");
+                                        //goto debugBlockNeighbours;
+
+                                        if (blockNeighbours[rowsBackup, colsBackup] == "G" && bigBlockArray[predator.getPos()[1] + howToMove(rowsBackup, colsBackup)[0] + 1, predator.getPos()[0] + howToMove(rowsBackup, colsBackup)[1] + 1] == "G")
                                         {
-                                            Debug.Log($"BBBB: {blockNeighbours[rowsBackup, colsBackup]} GGGG: {grid[predator.getPos()[0], predator.getPos()[1]]} at PREDATOR FALL BACK");
+                                            Debug.Log($"BLOCK: {blockNeighbours[rowsBackup, colsBackup]} GRID: {grid[predator.getPos()[0], predator.getPos()[1]]} at PREDATOR FALL BACK");
                                             if (entityNeighbours[rowsBackup, colsBackup] == null)
                                             {
                                                 //move prey to new location and delete old
