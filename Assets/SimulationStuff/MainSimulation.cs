@@ -9,6 +9,9 @@ namespace Assets.SimulationStuff
 {
     public class MainSimulation
     {
+        public static float foodDecreaseRate = -1f;
+        public static float energyDecreaseRate = -1f;
+        public static float waterDecreaseRate = -1f;
 
         private static int[] howToMove(int x, int y)
         {
@@ -107,10 +110,12 @@ namespace Assets.SimulationStuff
                             int count = 0;
                             while (!done && count < 8)
                             {
+                                Debug.Log($"DONE: {done} COUNT: {count}");
                                 int randomX = UnityEngine.Random.Range(0, blockNeighbours.GetLength(0));
                                 int randomY = UnityEngine.Random.Range(0, blockNeighbours.GetLength(1));
-                                if (blockNeighbours[randomX, randomY] == "G" && bigBlockArray[rows + howToMove(randomX, randomY)[0], cols + howToMove(randomX, randomY)[1]] == "G") //checks if random spot is Grass (G) block
+                                if (blockNeighbours[randomX, randomY] == "G" && bigBlockArray[prey.getPos()[0] + howToMove(randomX, randomY)[0] + 1, prey.getPos()[1] + howToMove(randomX, randomY)[1] + 1] == "G") //checks if random spot is Grass (G) block
                                 {
+                                    Debug.Log($"BBBB: {blockNeighbours[randomX, randomY]} GGGG: {grid[prey.getPos()[0], prey.getPos()[1]]} at PREY WHILE\nRANDOMX: {randomX}, RANDOMY: {randomY}");
                                     if (entityNeighbours[randomX, randomY] == null) //if block is Grass, then check if block is not currently occupied by another entity
                                     {
                                         //move prey to new location and delete old
@@ -119,6 +124,7 @@ namespace Assets.SimulationStuff
                                             newEntityGrid[rows + howToMove(randomX, randomY)[0], cols + howToMove(randomX, randomY)[1]] = prey;
                                             Debug.Log($"Prey moved to {rows + howToMove(randomX, randomY)[0]}, {cols + howToMove(randomX, randomY)[1]}\nTile was {blockNeighbours[randomX, randomY]}");
                                             done = true;
+                                            goto outsideFallBack;
                                         }
                                         catch (Exception ex)
                                         {
@@ -143,8 +149,9 @@ namespace Assets.SimulationStuff
                                 {
                                     for (int colsBackup = 0; colsBackup < blockNeighbours.GetLength(1); colsBackup++)
                                     {
-                                        if (blockNeighbours[rowsBackup, colsBackup] == "G" && bigBlockArray[rowsBackup + howToMove(rowsBackup, colsBackup)[0], colsBackup + howToMove(rowsBackup, colsBackup)[1]] == "G")
+                                        if (blockNeighbours[rowsBackup, colsBackup] == "G" && bigBlockArray[prey.getPos()[0] + howToMove(rowsBackup, colsBackup)[0] + 1, prey.getPos()[1] + howToMove(rowsBackup, colsBackup)[1] + 1] == "G")
                                         {
+                                            Debug.Log($"BBBB: {blockNeighbours[rowsBackup, colsBackup]} GGGG: {grid[prey.getPos()[0], prey.getPos()[1]]} at PREY FALL BACK");
                                             if (entityNeighbours[rowsBackup, colsBackup] == null)
                                             {
                                                 //move prey to new location and delete old
@@ -208,49 +215,59 @@ namespace Assets.SimulationStuff
                             int count = 0;
                             while (!done && count < 8)
                             {
+                                Debug.Log($"DONE: {done} COUNT: {count}");
                                 int randomX = UnityEngine.Random.Range(0, blockNeighbours.GetLength(0));
                                 int randomY = UnityEngine.Random.Range(0, blockNeighbours.GetLength(1));
-                                if (blockNeighbours[randomX, randomY] == "G" && bigBlockArray[rows + howToMove(randomX, randomY)[0], cols + howToMove(randomX, randomY)[1]] == "G") //checks if random spot is Grass (G) block
+                                if (blockNeighbours[randomX, randomY] == "G" && bigBlockArray[predator.getPos()[0] + howToMove(randomX, randomY)[0] + 1, predator.getPos()[1] + howToMove(randomX, randomY)[1] + 1] == "G") //checks if random spot is Grass (G) block
                                 {
-                                    Type typePred;
+                                    Debug.Log($"BBBB: {blockNeighbours[randomX, randomY]} GGGG: {grid[predator.getPos()[0], predator.getPos()[1]]} at PREDATOR WHILE\nRANDOMX: {randomX}, RANDOMY: {randomY}");
                                     if (entityNeighbours[randomX, randomY] != null)
                                     {
-                                        typePred = entityNeighbours[randomX, randomY].GetType();
-                                        if (entityNeighbours[randomX, randomY].GetType() == typeof(Prey))
+                                        try
                                         {
-                                            try
+                                            if (entityNeighbours[randomX, randomY].GetType() == typeof(Prey))
                                             {
-                                                newEntityGrid[rows + howToMove(randomX, randomY)[0], cols + howToMove(randomX, randomY)[1]] = predator;
-                                                Debug.Log($"Predator moved to {rows + howToMove(randomX, randomY)[0]}, {cols + howToMove(randomX, randomY)[1]}\nPredator has eaten Prey\n{blockNeighbours[randomX, randomY]}");
-                                                done = true;
+                                                try
+                                                {
+                                                    newEntityGrid[rows + howToMove(randomX, randomY)[0], cols + howToMove(randomX, randomY)[1]] = predator;
+                                                    Debug.Log($"Predator moved to {rows + howToMove(randomX, randomY)[0]}, {cols + howToMove(randomX, randomY)[1]}\nPredator has eaten Prey\n{blockNeighbours[randomX, randomY]}");
+                                                    done = true;
+                                                    goto outsideFallBack;
+                                                }
+                                                catch (Exception ex)
+                                                {
+                                                    Debug.Log($"Error at Predator while loop, error: {ex}");
+                                                }
                                             }
-                                            catch (Exception ex)
+                                            else if (entityNeighbours[randomX, randomY].GetType() == typeof(Predator))
                                             {
-                                                Debug.Log($"Error at Predator while loop, error: {ex}");
+                                                Debug.Log($"Cannot move predator to {rows + howToMove(randomX, randomY)[0]}, {cols + howToMove(randomX, randomY)[1]} due to Predator occupying space\n{blockNeighbours[randomX, randomY]}");
+                                            }
+                                            else
+                                            {
+                                                Debug.Log($"Error at entityNeighbours[randomX, randomY] != null, entityNeighbours: {entityNeighbours[randomX, randomY]}");
                                             }
                                         }
-                                        else if (entityNeighbours[randomX, randomY].GetType() == typeof(Predator))
+                                        catch (Exception ex)
                                         {
-                                            Debug.Log($"Cannot move predator to {rows + howToMove(randomX, randomY)[0]}, {cols + howToMove(randomX, randomY)[1]} due to Predator occupying space\n{blockNeighbours[randomX, randomY]}");
+                                            Debug.Log($"Error at entityNeighbours[randomX, randomY] != null, entityNeighbours: {entityNeighbours[randomX, randomY]}");
                                         }
-                                        else
-                                        {
-                                            try
-                                            {
-                                                newEntityGrid[rows + howToMove(randomX, randomY)[0], cols + howToMove(randomX, randomY)[1]] = predator;
-                                                Debug.Log($"Predator moved to {rows + howToMove(randomX, randomY)[0]}, {cols + howToMove(randomX, randomY)[1]}\nTile is {blockNeighbours[randomX, randomY]}");
-                                                done = true;
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                Debug.Log($"Error at Predator while loop, error: {ex}");
-                                            }
-                                        }
+                                        
                                     }
                                     else
                                     {
+                                        if (rows + howToMove(randomX, randomY)[0] > newEntityGrid.GetLength(0) - 1 || cols + howToMove(randomX, randomY)[1] > newEntityGrid.GetLength(1) - 1 || rows + howToMove(randomX, randomY)[0] < 0 || cols + howToMove(randomX, randomY)[1] < 0)
+                                        {
+                                            Debug.Log($"Out of Bounds at predator while loop, rows: {rows + howToMove(randomX, randomY)[0]} cols: {cols + howToMove(randomX, randomY)[1]}");
+                                            goto outsideOutOfBoundsAreaWhile;
+                                        }
+                                        //code will only execute if above condition is not met, ie inside array
+                                        newEntityGrid[rows + howToMove(randomX, randomY)[0], cols + howToMove(randomX, randomY)[1]] = predator;
+                                        Debug.Log($"Predator moved to {rows + howToMove(randomX, randomY)[0]}, {cols + howToMove(randomX, randomY)[1]}\nTile is {blockNeighbours[randomX, randomY]}");
+                                        done = true;
                                         Debug.Log($"entityNeighbours was default at Predator");
                                     }
+                                    outsideOutOfBoundsAreaWhile:;
                                 }
                                 else
                                 {
@@ -265,8 +282,9 @@ namespace Assets.SimulationStuff
                                 {
                                     for (int colsBackup = 0; colsBackup < blockNeighbours.GetLength(1); colsBackup++)
                                     {
-                                        if (blockNeighbours[rowsBackup, colsBackup] == "G" && bigBlockArray[rowsBackup + howToMove(rowsBackup, colsBackup)[0], colsBackup + howToMove(rowsBackup, colsBackup)[1]] == "G")
+                                        if (blockNeighbours[rowsBackup, colsBackup] == "G" && bigBlockArray[predator.getPos()[0] + howToMove(rowsBackup, colsBackup)[0] + 1, predator.getPos()[1] + howToMove(rowsBackup, colsBackup)[1] + 1] == "G")
                                         {
+                                            Debug.Log($"BBBB: {blockNeighbours[rowsBackup, colsBackup]} GGGG: {grid[predator.getPos()[0], predator.getPos()[1]]} at PREDATOR FALL BACK");
                                             if (entityNeighbours[rowsBackup, colsBackup] == null)
                                             {
                                                 //move prey to new location and delete old
@@ -384,5 +402,150 @@ namespace Assets.SimulationStuff
             return entityGrid;
         }
 
+        public static void changeEnergyEntities(string EnergyType, object entity, float foodLevel, float energyLevel, float waterLevel)
+        {
+            if (entity == null)
+            {
+                return;
+            }
+            else
+            {
+                switch (EnergyType.ToUpper())
+                {
+                    case "FOOD":
+                        if (entity.GetType() == typeof(Prey))
+                        {
+                            Prey prey = (Prey)entity;
+                            prey.updateFood(foodLevel);
+                        }
+                        else
+                        {
+                            Predator predator = (Predator)entity;
+                            predator.updateFood(foodLevel);
+                        }
+                        break;
+                    case "ENERGY":
+                        if (entity.GetType() == typeof(Prey))
+                        {
+                            Prey prey = (Prey)entity;
+                            prey.updateEnergy(energyLevel);
+                        }
+                        else
+                        {
+                            Predator predator = (Predator)entity;
+                            predator.updateEnergy(energyLevel);
+                        }
+                        break;
+                    case "WATER":
+                        if (entity.GetType() == typeof(Prey))
+                        {
+                            Prey prey = (Prey)entity;
+                            prey.updateWater(waterLevel);
+                        }
+                        else
+                        {
+                            Predator predator = (Predator)entity;
+                            predator.updateWater(waterLevel);
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        }
+
+        public static object decreaseFoodLevel(object entity)
+        {
+            if (entity.GetType() == typeof(Prey))
+            {
+                Prey prey = (Prey)entity;
+                prey.updateFood(foodDecreaseRate);
+            }
+            else
+            {
+                Predator predator = (Predator)entity;
+                predator.updateFood(foodDecreaseRate);
+            }
+            return entity;
+        }
+        public static object decreaseEnergyLevel(object entity)
+        {
+            if (entity.GetType() == typeof(Prey))
+            {
+                Prey prey = (Prey)entity;
+                prey.updateEnergy(energyDecreaseRate);
+            }
+            else
+            {
+                Predator predator = (Predator)entity;
+                predator.updateEnergy(energyDecreaseRate);
+            }
+            return entity;
+        }
+
+        public static void feedEntities(object[,] entityGrid, float foodLevel)
+        {
+            for (int row = 0; row < entityGrid.GetLength(0); row++)
+            {
+                for (int col = 0; col < entityGrid.GetLength(1); col++)
+                {
+                    if (entityGrid[row, col] == null)
+                    {
+                        goto outside;
+                    }
+                    else
+                    {
+                        changeEnergyEntities("FOOD", entityGrid[row, col], foodLevel, 0, 0);
+                    }
+                    outside:;
+                }
+            }
+        }
+
+        public static object[,] killEntities(object[,] entityGrid)
+        {
+            object[,] newEntityGrid = new object[entityGrid.GetLength(0), entityGrid.GetLength(1)];
+
+            for (int row = 0; row < entityGrid.GetLength(0); row++)
+            {
+                for (int col = 0; col < entityGrid.GetLength(1); col++)
+                {
+                    if (entityGrid[row, col] == null)
+                    {
+                        goto outside;
+                    }
+                    else
+                    {
+                        if (entityGrid[row, col].GetType() == typeof(Prey))
+                        {
+                            Prey prey = (Prey)entityGrid[row, col];
+                            if (prey.isDead())
+                            {
+                                newEntityGrid[row, col] = null;
+                            }
+                            else
+                            {
+                                newEntityGrid[row, col] = entityGrid[row, col];
+                            }
+                        }
+                        else
+                        {
+                            Predator predator = (Predator)entityGrid[row, col];
+                            if (predator.isDead())
+                            {
+                                newEntityGrid[row, col] = null;
+                            }
+                            else
+                            {
+                                newEntityGrid[row, col] = entityGrid[row, col];
+                            }
+                        }
+                    }
+                    outside:;
+                }
+            }
+            return newEntityGrid;
+        }
     }
 }

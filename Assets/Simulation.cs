@@ -58,6 +58,12 @@ namespace Assets
         {
             //get newEntityGrid after moves
             entityGrid = SimulationStuff.MainSimulation.moveEntities(grid, entityGrid);
+            //reproduce entities if possible
+            entityGrid = SimulationStuff.MainSimulation.reproduceEntities(grid, entityGrid);
+            //feed entities
+            SimulationStuff.MainSimulation.feedEntities(entityGrid, 1f); //can get input from user in future
+            //kill entities
+            SimulationStuff.MainSimulation.killEntities(entityGrid);
             
 
             //display changes

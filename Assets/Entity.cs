@@ -39,7 +39,7 @@ namespace Assets
 
         public bool canReproduce() { return energyLevel == minReproductionEnergy; }
 
-        public bool isDead() { return foodLevel == 0 || waterLevel == 0; }
+        public bool isDead() { return foodLevel == 0 || waterLevel == 0 || energyLevel == 0; }
 
         public string getName() { return name; }
 
@@ -48,6 +48,10 @@ namespace Assets
         public void updateNumOffSprings(int value) { numOffsprings += value; }
 
         public void updateEnergy(float value) { energyLevel = value; }
+
+        public void updateFood(float value) { foodLevel += value; }
+
+        public void updateWater(float value) { waterLevel += value; }
 
 
         /* create 3x3 array for both entities and blocks
