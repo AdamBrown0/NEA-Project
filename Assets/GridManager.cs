@@ -17,9 +17,9 @@ public class GridManager : MonoBehaviour
     public static int maxPredatorCount;
 
 
-    private string[,] grid = new string[rows, cols];
+    public string[,] grid = new string[rows, cols];
     public object[,] entityGrid = new object[rows, cols];
-    private GameObject[,] gameObjectGrid = new GameObject[rows, cols];
+    public GameObject[,] gameObjectGrid = new GameObject[rows, cols];
 
 
     private float tileSize = 1f;

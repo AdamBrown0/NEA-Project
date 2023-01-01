@@ -1,0 +1,1 @@
+﻿0001 ---> Debug.Log($"Object detected at {x}, {y}. Object type is: {type}. Error: 0001"); IN NewSimulation.cs ---> Invalid Object Detected in New Simulation
