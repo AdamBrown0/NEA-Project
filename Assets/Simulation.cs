@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.SimulationStuff;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,15 +57,19 @@ namespace Assets
         }
         public static void StepSimulation()
         {
-            //get newEntityGrid after moves
-            entityGrid = SimulationStuff.MainSimulation.moveEntities(grid, entityGrid);
-            //reproduce entities if possible
-            entityGrid = SimulationStuff.MainSimulation.reproduceEntities(grid, entityGrid);
-            //feed entities
-            SimulationStuff.MainSimulation.feedEntities(entityGrid, 1f); //can get input from user in future
-            //kill entities
-            SimulationStuff.MainSimulation.killEntities(entityGrid);
-            
+            ////get newEntityGrid after moves
+            //entityGrid = SimulationStuff.MainSimulation.moveEntities(grid, entityGrid);
+            ////reproduce entities if possible
+            //entityGrid = SimulationStuff.MainSimulation.reproduceEntities(grid, entityGrid);
+            ////feed entities
+            //SimulationStuff.MainSimulation.feedEntities(entityGrid, 1f); //can get input from user in future
+            ////kill entities
+            //SimulationStuff.MainSimulation.killEntities(entityGrid);
+
+            //NEW SIMULATION
+            NewSimulation sim = new NewSimulation();
+            sim.runSimulation();
+
 
             //display changes
             GameObject gridManagerObject = GameObject.Find("GridHolder");

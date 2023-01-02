@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using Assets.SimulationStuff;
 
 public class GridManager : MonoBehaviour
 {
@@ -48,6 +49,18 @@ public class GridManager : MonoBehaviour
         //giving Simulation class access to both grids
         Assets.Simulation.grid = grid;
         Assets.Simulation.entityGrid = entityGrid;
+
+        //giving MoveEntities class access to both grids
+        MoveEntities.BaseBlockGrid = grid;
+        MoveEntities.BaseEntityGrid = entityGrid;
+        MoveEntities.BaseGameObjectGrid= gameObjectGrid;
+    }
+    void Update()
+    {
+        //giving MoveEntities class access to both grids
+        MoveEntities.BaseBlockGrid = grid;
+        MoveEntities.BaseEntityGrid = entityGrid;
+        MoveEntities.BaseGameObjectGrid = gameObjectGrid;
     }
 
     private void GenerateGrid()
