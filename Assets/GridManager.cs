@@ -55,7 +55,9 @@ public class GridManager : MonoBehaviour
         MoveEntities.BaseEntityGrid = entityGrid;
         MoveEntities.BaseGameObjectGrid= gameObjectGrid;
     }
-    void Update()
+    
+
+    public void updateNewSim()
     {
         //giving MoveEntities class access to both grids
         MoveEntities.BaseBlockGrid = grid;

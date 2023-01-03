@@ -76,7 +76,8 @@ namespace Assets
             GridManager gridManager = gridManagerObject.GetComponent<GridManager>();
             gridManager.entityGrid = entityGrid;
             gridManager.displayEntities(entityGrid);
-            gridManager.displayEntitesOnConsole(entityGrid);
+            gridManager.updateNewSim();
+            //gridManager.displayEntitesOnConsole(entityGrid);
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Security.Cryptography;
 using UnityEditorInternal.Profiling;
 using UnityEditor;
+using UnityEngine.Rendering;
 
 namespace Assets.SimulationStuff
 {
@@ -39,6 +40,7 @@ namespace Assets.SimulationStuff
      * int colsOrWidth = ary.GetLength(1); This would be an X value
      * 
      * Array2D[rows, cols] => Array2D[y, x] since rows is height
+     * 
      */
     internal class NewSimulation
     {
@@ -46,7 +48,7 @@ namespace Assets.SimulationStuff
         public void runSimulation()
         {
             MoveEntities moveEntities = new MoveEntities();
-            moveEntities.Move();
+            Simulation.entityGrid = moveEntities.Move();
         }
 
     }
@@ -67,11 +69,34 @@ namespace Assets.SimulationStuff
 
         public object[,] Move()
         {
+            string str = null;
+            str = null;
+            for (int x = 0; x < tempEntityGrid.GetLength(0); x++)
+            {
+                for (int y = 0; y < tempEntityGrid.GetLength(1); y++)
+                {
+                    if (tempEntityGrid[x, y] != null)
+                    {
+                        str += (tempEntityGrid[x, y].GetType().ToString()) + " ";
+                    }
+                    else
+                    {
+                        str += "null ";
+                    }
+                }
+                str += "\n";
+            }
+            str += "\n222";
+            Debug.Log(str);
             //Loop through BaseBlockGrid
             for (int x = 0; x < BaseEntityGrid.GetLength(0); x++)
             {
                 for (int y = 0; y < BaseEntityGrid.GetLength(1); y++)
                 {
+                    //str += y.ToString() + " ";
+
+                    
+
                     if (BaseEntityGrid[x, y] != null) // find entities from base grid to stop chance of moving entities twice
                     {
                         
@@ -84,24 +109,36 @@ namespace Assets.SimulationStuff
 
                             bool moved = false;
                             int moveTries = 0;
-                            do
+                            while (!moved && moveTries <= 9)
                             {
                                 int[] checkMoveReturn = checkMove(PreyBlockNeighbours, PreyEntityNeighbours, false);
-                                int moveToX = x + checkMoveReturn[0];
-                                int moveToY = y + checkMoveReturn[1];
-                                try
+                                int moveToX = x + checkMoveReturn[1];
+                                int moveToY = y + checkMoveReturn[0];
+                                if ((moveToX <= (BaseBlockGrid.GetLength(0) - 1) && moveToX > 0) && (moveToY <= (BaseBlockGrid.GetLength(1) - 1) && moveToY > 0))
                                 {
                                     tempEntityGrid[x, y] = null;
                                     tempEntityGrid[moveToX, moveToY] = prey;
                                     moved = true;
                                     Debug.Log($"Moved to {moveToX} {moveToY}, moveTries {moveTries}, moved {moved}");
                                 }
-                                catch (IndexOutOfRangeException)
+                                else
                                 {
-                                    Debug.Log($"Caught IndexOutOfRangeException at Prey section, trying to move again, tried to move to {moveToX} {moveToY}, moveTries {moveTries}, moved {moved}");
+                                    Debug.Log($"Caught IndexOutOfRangeException at Prey section, trying to move again, tried to move to {moveToX} {moveToY}, moveTries {moveTries}, moved {moved}, BaseBlockGrid.GetLength {BaseBlockGrid.GetLength(0) - 1} {BaseBlockGrid.GetLength(1) - 1}");
                                     moveTries++;
                                 }
-                            } while (!moved && moveTries <= 9);
+                                //try
+                                //{
+                                //    tempEntityGrid[moveToX, moveToY] = prey;
+                                //    tempEntityGrid[x, y] = null;
+                                //    moved = true;
+                                //    Debug.Log($"Moved to {moveToX} {moveToY}, moveTries {moveTries}, moved {moved}");
+                                //}
+                                //catch (IndexOutOfRangeException)
+                                //{
+                                //    Debug.Log($"Caught IndexOutOfRangeException at Prey section, trying to move again, tried to move to {moveToX} {moveToY}, moveTries {moveTries}, moved {moved}");
+                                //    moveTries++;
+                                //}
+                            }
 
 
 
@@ -117,17 +154,18 @@ namespace Assets.SimulationStuff
                             while (!moved && moveTries <= 9)
                             {
                                 int[] checkMoveReturn = checkMove(PredatorBlockNeighbours, PredatorEntityNeighbours, true);
-                                int moveToX = x + checkMoveReturn[0];
-                                int moveToY = y + checkMoveReturn[1];
-                                try
+                                int moveToX = x + checkMoveReturn[1];
+                                int moveToY = y + checkMoveReturn[0];
+                                if ((moveToX <= (BaseBlockGrid.GetLength(0) - 1) && moveToX > 0) && (moveToY <= (BaseBlockGrid.GetLength(1) - 1) && moveToY > 0))
                                 {
                                     tempEntityGrid[x, y] = null;
                                     tempEntityGrid[moveToX, moveToY] = predator;
                                     moved = true;
+                                    Debug.Log($"Moved to {moveToX} {moveToY}, moveTries {moveTries}, moved {moved}");
                                 }
-                                catch (IndexOutOfRangeException)
+                                else
                                 {
-                                    Debug.Log($"Caught IndexOutOfRangeException at Predator section, trying to move again");
+                                    Debug.Log($"Caught IndexOutOfRangeException at Predator section, trying to move again, tried to move to {moveToX} {moveToY}, moveTries {moveTries}, moved {moved}, BaseBlockGrid.GetLength {BaseBlockGrid.GetLength(0) - 1} {BaseBlockGrid.GetLength(1) - 1}");
                                     moveTries++;
                                 }
                             }
@@ -137,12 +175,53 @@ namespace Assets.SimulationStuff
                             Debug.Log($"Object detected at {y}, {x}. Object type is: {type}. Error: 0001");
                         }
                     }
+                    //if (tempEntityGrid[x, y] != null)
+                    //{
+                    //    str += (tempEntityGrid[x, y].GetType().ToString()) + " ";
+                    //    //Console.Write($"{BaseEntityGrid[x, y].GetType().ToString()} ");
+                    //}
+                    //else
+                    //{
+                    //    str += "null ";
+                    //    //Console.Write("null ");
+                    //}
+                    //try
+                    //{
+                    //    str += (tempEntityGrid[x, y].GetType().ToString()) + " ";
+                    //}
+                    //catch (Exception)
+                    //{
+                    //    str += "null ";
+                    //}
+                    //Console.Write("\n");
                 }
+                //str += "\n";
             }
+            //Debug.Log(str);
+
+            str = null;
+            for (int x = 0; x < tempEntityGrid.GetLength(0); x++)
+            {
+                for (int y = 0; y < tempEntityGrid.GetLength(1); y++)
+                {
+                    if (tempEntityGrid[x, y] != null)
+                    {
+                        str += (tempEntityGrid[x, y].GetType().ToString()) + " ";
+                    }
+                    else
+                    {
+                        str += "null ";
+                    }
+                }
+                str += "\n";
+            }
+            str += "\n111";
+            Debug.Log(str);
 
             return tempEntityGrid;
         }
 
+        // debug
         private int[] checkMove(string[,] blockNeighbours, object[,] entityNeighbours, bool isPred)
         {
             bool done = false;
