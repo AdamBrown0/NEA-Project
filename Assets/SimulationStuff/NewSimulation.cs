@@ -49,6 +49,7 @@ namespace Assets.SimulationStuff
         {
             MoveEntities moveEntities = new MoveEntities();
             Simulation.entityGrid = moveEntities.Move();
+            Debug.Log("NEWSIM MOVE DONE");
         }
 
     }
@@ -104,7 +105,7 @@ namespace Assets.SimulationStuff
                         if (type == typeof(Prey)) // && Regex.IsMatch(BaseGameObjectGrid[x, y].name, "Prey [A-Za-z0-9]+", RegexOptions.IgnoreCase)) // check if it is equal to Prey, this means there is a Prey entity at x, y  regex check to see if the GameObject at x, y includes "Prey"
                         {
                             Prey prey = (Prey)BaseEntityGrid[x, y];
-                            string[,] PreyBlockNeighbours = prey.getBlockNeighbours(BaseBlockGrid);
+                            string[,] PreyBlockNeighbours = prey.getBlockNeighbours(BaseBlockGrid); // THIS NEVER UPDATES
                             object[,] PreyEntityNeighbours = prey.getEntityNeighbours(tempEntityGrid);
 
                             bool moved = false;
@@ -140,13 +141,23 @@ namespace Assets.SimulationStuff
                                 //}
                             }
 
-
-
+                            prey = null;
                         }
                         else if (type == typeof(Predator)) //&& Regex.IsMatch(BaseGameObjectGrid[x, y].name, "Predator [A-Za-z0-9]+", RegexOptions.IgnoreCase)) // check if it is equal to Predator, this means there is a Prey entity at x, y  regex check to see if the GameObject at x, y includes "Predator"
                         {
                             Predator predator = (Predator)BaseEntityGrid[x, y];
-                            string[,] PredatorBlockNeighbours = predator.getBlockNeighbours(BaseBlockGrid);
+                            string[,] PredatorBlockNeighbours = predator.getBlockNeighbours(BaseBlockGrid); // why does this never update
+                            string bn = "";
+                            for (int xi = 0; xi < PredatorBlockNeighbours.GetLength(0); xi++)
+                            {
+                                for (int yi = 0; yi < PredatorBlockNeighbours.GetLength(1); yi++)
+                                {
+                                    bn += $"{PredatorBlockNeighbours[yi, xi]}";
+                                }
+
+                                bn += "\n";
+                            }
+                            Debug.Log($"BLOCKNEIGHBOURS222 \n {bn} x: {x} y: {y}");
                             object[,] PredatorEntityNeighbours = predator.getEntityNeighbours(tempEntityGrid);
 
                             bool moved = false;
@@ -169,6 +180,8 @@ namespace Assets.SimulationStuff
                                     moveTries++;
                                 }
                             }
+
+                            predator = null;
                         }
                         else // this shouldn't happen, but is here to Debug, this means that there is no Prey or Predator at x, y but there is still an Object
                         {
@@ -217,13 +230,24 @@ namespace Assets.SimulationStuff
             }
             str += "\n111";
             Debug.Log(str);
-
+        
             return tempEntityGrid;
         }
 
         // debug
         private int[] checkMove(string[,] blockNeighbours, object[,] entityNeighbours, bool isPred)
         {
+            string bn = "";
+            for (int x = 0; x < blockNeighbours.GetLength(0); x++)
+            {
+                for (int y = 0; y < blockNeighbours.GetLength(1); y++)
+                {
+                    bn += $"{blockNeighbours[y, x]}";
+                }
+
+                bn += "\n";
+            }
+            Debug.Log($"BLOCKNEIGHBOURS \n {bn}");
             bool done = false;
             int[] possibleMove = new int[2];
             bool possibleMoveFound = false;
@@ -322,7 +346,7 @@ namespace Assets.SimulationStuff
                 }
 
             }
-            return move;
+            return move; // returns how to move, but returns 1 to the left of where it is supposed to be .... OR the displaying is not correct .... its not that its displaying the wrong thing, it displays before it moves. 
         }
 
         private int[] backupMove(string[,] blockNeighbours, object[,] entityNeighbours)
@@ -415,6 +439,5 @@ namespace Assets.SimulationStuff
                 return null;
             }
         }
-        
     }
 }

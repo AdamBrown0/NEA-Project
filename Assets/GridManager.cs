@@ -14,7 +14,7 @@ public class GridManager : MonoBehaviour
     public static int cols;
     public static int minPreyCount;
     public static int minPredatorCount;
-    public static int maxPreyCount;
+    private static int maxPreyCount;
     public static int maxPredatorCount;
 
 

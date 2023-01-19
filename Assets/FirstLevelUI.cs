@@ -18,7 +18,7 @@ public class FirstLevelUI : MonoBehaviour
         GridManager.cols = 8;
         Debug.Log($"Grid Columns set to {GridManager.cols}");
 
-        GridManager.minPreyCount = 1;
+        GridManager.minPreyCount = 0;
         Debug.Log($"Min Prey count set to {GridManager.minPreyCount}");
 
         GridManager.minPredatorCount = 1;
