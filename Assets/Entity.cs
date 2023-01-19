@@ -45,6 +45,8 @@ namespace Assets
 
         public int[] getPos() { return new int[2] { x, y }; }
 
+        public void setPos(int x, int y) { this.x = x; this.y = y; }
+
         public void updateNumOffSprings(int value) { numOffsprings += value; }
 
         public void updateEnergy(float value) { energyLevel = value; }

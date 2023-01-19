@@ -105,6 +105,7 @@ namespace Assets.SimulationStuff
                         if (type == typeof(Prey)) // && Regex.IsMatch(BaseGameObjectGrid[x, y].name, "Prey [A-Za-z0-9]+", RegexOptions.IgnoreCase)) // check if it is equal to Prey, this means there is a Prey entity at x, y  regex check to see if the GameObject at x, y includes "Prey"
                         {
                             Prey prey = (Prey)BaseEntityGrid[x, y];
+                            prey.setPos(x, y);
                             string[,] PreyBlockNeighbours = prey.getBlockNeighbours(BaseBlockGrid); // THIS NEVER UPDATES
                             object[,] PreyEntityNeighbours = prey.getEntityNeighbours(tempEntityGrid);
 
@@ -146,6 +147,7 @@ namespace Assets.SimulationStuff
                         else if (type == typeof(Predator)) //&& Regex.IsMatch(BaseGameObjectGrid[x, y].name, "Predator [A-Za-z0-9]+", RegexOptions.IgnoreCase)) // check if it is equal to Predator, this means there is a Prey entity at x, y  regex check to see if the GameObject at x, y includes "Predator"
                         {
                             Predator predator = (Predator)BaseEntityGrid[x, y];
+                            predator.setPos(x, y);
                             string[,] PredatorBlockNeighbours = predator.getBlockNeighbours(BaseBlockGrid); // why does this never update
                             string bn = "";
                             for (int xi = 0; xi < PredatorBlockNeighbours.GetLength(0); xi++)
