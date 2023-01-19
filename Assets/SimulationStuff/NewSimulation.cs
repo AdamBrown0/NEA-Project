@@ -34,6 +34,15 @@ namespace Assets.SimulationStuff
      *          If space is occupied by Predator, block that space from being moved to and try another space
      *  Update GridManager.entityGrid to this new entityGrid 
      * 
+     * Reproducing Prey;
+     *  Requirements:
+     *      object[,] entityGrid <-- needs to find entity neighbours
+     *      object[,] Entity.getEntityNeighbours(object[,] entityGrid) <-- needs to check if prey is within range for reproducing
+     *
+     * Create temporary entityGrid which is a copy of GridManager.entityGrid (makes it so it cant catch a new Prey), this is returned to update the main entityGrid
+     *
+     * Loop through tempEntityGrid, if there is an Entity check if it is Prey, if it is Prey check entityNeighbours, if entityNeighbours shows Prey then take average reproductionChance
+     * compare average reproductionChance against random number generated, if bigger then reproduce and place next to one of parents
      * 
      * Useful Info:
      * int rowsOrHeight = ary.GetLength(0); This would be a Y value
@@ -44,12 +53,16 @@ namespace Assets.SimulationStuff
      */
     internal class NewSimulation
     {
-        
+        public static string[,] BaseBlockGrid;
+        public static object[,] BaseEntityGrid;
         public void runSimulation()
         {
-            MoveEntities moveEntities = new MoveEntities();
-            Simulation.entityGrid = moveEntities.Move();
+            MoveEntities moveEntities = new MoveEntities(BaseBlockGrid, BaseEntityGrid);
+            Simulation.entityGrid = moveEntities.Move(); // move entities working!
             Debug.Log("NEWSIM MOVE DONE");
+            ReproduceEntities reproduceEntities = new ReproduceEntities(BaseBlockGrid, BaseEntityGrid);
+            Simulation.entityGrid = reproduceEntities.Reproduce();
+            Debug.Log("NEWSIM REPRODUCTION DONE");
         }
 
     }
@@ -60,11 +73,12 @@ namespace Assets.SimulationStuff
         private GridManager MoveEntitiesGridManager = new GridManager();
         public static string[,] BaseBlockGrid;
         public static object[,] BaseEntityGrid;
-        public static GameObject[,] BaseGameObjectGrid;
         private object[,] tempEntityGrid; //= new object[BaseEntityGrid.GetLength(0), BaseEntityGrid.GetLength(1)];
         //private GameObject[,] tempGameObjectGrid;
-        internal MoveEntities()
+        internal MoveEntities(string[,] baseBlockGrid, object[,] baseEntityGrid)
         {
+            BaseBlockGrid = baseBlockGrid;
+            BaseEntityGrid = baseEntityGrid;
             tempEntityGrid = BaseEntityGrid;
         }
 
@@ -141,14 +155,13 @@ namespace Assets.SimulationStuff
                                 //    moveTries++;
                                 //}
                             }
-
-                            prey = null;
+                            
                         }
                         else if (type == typeof(Predator)) //&& Regex.IsMatch(BaseGameObjectGrid[x, y].name, "Predator [A-Za-z0-9]+", RegexOptions.IgnoreCase)) // check if it is equal to Predator, this means there is a Prey entity at x, y  regex check to see if the GameObject at x, y includes "Predator"
                         {
                             Predator predator = (Predator)BaseEntityGrid[x, y];
                             predator.setPos(x, y);
-                            string[,] PredatorBlockNeighbours = predator.getBlockNeighbours(BaseBlockGrid); // why does this never update
+                            string[,] PredatorBlockNeighbours = predator.getBlockNeighbours(BaseBlockGrid); 
                             string bn = "";
                             for (int xi = 0; xi < PredatorBlockNeighbours.GetLength(0); xi++)
                             {
@@ -397,7 +410,7 @@ namespace Assets.SimulationStuff
             }
         }
 
-        private int[] translateMove(int x, int y) // takes in the randomX and randomY and outputs how to get to that location
+        internal int[] translateMove(int x, int y) // takes in the randomX and randomY and outputs how to get to that location
         {
             if (x == 0 && y == 0)
             {
@@ -441,5 +454,131 @@ namespace Assets.SimulationStuff
                 return null;
             }
         }
+    }
+
+    internal class ReproduceEntities
+    {
+        public static string[,] BaseBlockGrid;
+        public static object[,] BaseEntityGrid;
+        private object[,] tempEntityGrid;
+
+        internal ReproduceEntities(string[,] baseBlockGrid, object[,] baseEntityGrid)
+        {
+            BaseBlockGrid = baseBlockGrid;
+            BaseEntityGrid = baseEntityGrid;
+            tempEntityGrid = BaseEntityGrid;
+        }
+
+        public object[,] Reproduce()
+        {
+            for (int x = 0; x < BaseEntityGrid.GetLength(0); x++)
+            {
+                for (int y = 0; y < BaseEntityGrid.GetLength(1); y++)
+                {
+                    if (BaseEntityGrid[x, y] == null)
+                    {
+                        continue;
+                    }
+
+                    Type type = BaseEntityGrid[x, y].GetType();
+                    if (type == typeof(Prey))
+                    {
+                        bool offspringSpawned = false;
+                        Prey prey = (Prey)BaseEntityGrid[x, y];
+                        object[,] PreyEntityNeighbours = prey.getEntityNeighbours(BaseEntityGrid);
+                        for (int xi = 0; xi < PreyEntityNeighbours.GetLength(0); xi++)
+                        {
+                            if (offspringSpawned)
+                            {
+                                continue;
+                            }
+                            for (int yi = 0; yi < PreyEntityNeighbours.GetLength(1); yi++)
+                            {
+                                if (PreyEntityNeighbours[xi, yi] == null || offspringSpawned)
+                                {
+                                    continue;
+                                }
+
+                                Type typeInside = PreyEntityNeighbours[xi, yi].GetType();
+                                if (typeInside == typeof(Prey))
+                                {
+                                    Prey otherPrey = (Prey)PreyEntityNeighbours[xi, yi];
+                                    if (prey.getName() == otherPrey.getName())
+                                    {
+                                        Debug.Log("Passing reproduction due to same entities");
+                                        continue;
+                                    }
+                                    int basePreyRepChance = prey.getReproductionProb();
+                                    int otherPreyRepChance = otherPrey.getReproductionProb();
+                                    int averageRepChance = (basePreyRepChance + otherPreyRepChance) / 2;
+                                    int repChance = UnityEngine.Random.Range(0, 100);
+                                    if (averageRepChance >= repChance && prey.getMaxOffsprings() > prey.getNumOffsprings() && otherPrey.getMaxOffsprings() > otherPrey.getNumOffsprings())
+                                    {
+                                        float energyLevel = UnityEngine.Random.Range(5f, 10f);
+                                        float foodLevel = UnityEngine.Random.Range(5f, 10f);
+                                        float waterLevel = UnityEngine.Random.Range(5f, 10f);
+                                        int maxOffsprings = UnityEngine.Random.Range(1, 3);
+                                        int reproductionProb = UnityEngine.Random.Range(0, 100);
+                                        reproductionProb = 100;
+                                        int numOffsprings = 0;
+                                        float minReproductionEnergy = UnityEngine.Random.Range(2f, 10f);
+                                        string name = GridManager.names[UnityEngine.Random.Range(0, GridManager.names.Count + 1)];
+                                        GridManager.names.Remove(name);
+                                        string[,] BasePreyBlockNeighbours = prey.getBlockNeighbours(BaseBlockGrid); // this allows us to find a valid spawn location for the new prey
+                                        int xPrey;
+                                        int yPrey;
+                                        int spawnTries = 0;
+                                        for (int xb = 0; xb < BasePreyBlockNeighbours.GetLength(0); xb++)
+                                        {
+                                            if (offspringSpawned || spawnTries > 9)
+                                            {
+                                                continue;
+                                            }
+                                            for (int yb = 0; yb < BasePreyBlockNeighbours.GetLength(1); yb++)
+                                            {
+                                                if (offspringSpawned || spawnTries > 9)
+                                                {
+                                                    continue;
+                                                }
+                                                if (BasePreyBlockNeighbours[xb, yb] == "G" && PreyEntityNeighbours[xb, yb] == null ) // checks if block is Grass AND parent does not occupy it
+                                                {
+                                                    MoveEntities moveEntities = new MoveEntities(null, null);
+                                                    int[] whereToSpawn = moveEntities.translateMove(xb, yb);
+                                                    xPrey = x + whereToSpawn[1];
+                                                    yPrey = y + whereToSpawn[0];
+                                                    if ((xPrey <= (BaseBlockGrid.GetLength(0) - 1) && xPrey > 0) &&
+                                                        (yPrey <= (BaseBlockGrid.GetLength(1) - 1) && yPrey > 0))
+                                                    {
+                                                        if (BaseBlockGrid[prey.getPos()[0] + whereToSpawn[1], prey.getPos()[1] + whereToSpawn[0]] == "G")
+                                                        {
+                                                            tempEntityGrid[xPrey, yPrey] = new Prey(energyLevel, foodLevel, waterLevel, maxOffsprings, reproductionProb, numOffsprings, minReproductionEnergy, name, xPrey, yPrey);
+                                                            Debug.Log($"Prey created at {x}, {y}. Name: {name}. Bred by {prey.getName()} {otherPrey.getName()}");
+                                                            offspringSpawned = true;
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        spawnTries++;
+                                                    }
+                                                    
+                                                }
+                                            }
+                                        }
+                                        
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return tempEntityGrid;
+        }
+    }
+
+    internal class ChangeEntityValues
+    {
+        
     }
 }

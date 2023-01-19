@@ -18,9 +18,11 @@ public class ThirdLevelUI : MonoBehaviour
         Debug.Log($"Grid Columns set to {GridManager.cols}");
 
         GridManager.minPreyCount = 25;
+        GridManager.maxPreyCount = 30;
         Debug.Log($"Min Prey count set to {GridManager.minPreyCount}");
 
-        GridManager.minPredatorCount = 25;
+        GridManager.minPredatorCount = 20;
+        GridManager.maxPreyCount = 30;
         Debug.Log($"Min Predator count set to {GridManager.minPredatorCount}");
     }
 }

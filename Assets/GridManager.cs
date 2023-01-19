@@ -14,7 +14,7 @@ public class GridManager : MonoBehaviour
     public static int cols;
     public static int minPreyCount;
     public static int minPredatorCount;
-    private static int maxPreyCount;
+    public static int maxPreyCount;
     public static int maxPredatorCount;
 
 
@@ -51,18 +51,16 @@ public class GridManager : MonoBehaviour
         Assets.Simulation.entityGrid = entityGrid;
 
         //giving MoveEntities class access to both grids
-        MoveEntities.BaseBlockGrid = grid;
-        MoveEntities.BaseEntityGrid = entityGrid;
-        MoveEntities.BaseGameObjectGrid= gameObjectGrid;
+        NewSimulation.BaseBlockGrid = grid;
+        NewSimulation.BaseEntityGrid = entityGrid;
     }
     
 
     public void updateNewSim()
     {
         //giving MoveEntities class access to both grids
-        MoveEntities.BaseBlockGrid = grid;
-        MoveEntities.BaseEntityGrid = entityGrid;
-        MoveEntities.BaseGameObjectGrid = gameObjectGrid;
+        NewSimulation.BaseBlockGrid = grid;
+        NewSimulation.BaseEntityGrid = entityGrid;
     }
 
     private void GenerateGrid()
@@ -343,8 +341,9 @@ public class GridManager : MonoBehaviour
                     float energyLevel = UnityEngine.Random.Range(5f, 10f);
                     float foodLevel = UnityEngine.Random.Range(5f, 10f);
                     float waterLevel = UnityEngine.Random.Range(5f, 10f);
-                    int maxOffsprings = UnityEngine.Random.Range(0, 6);
+                    int maxOffsprings = UnityEngine.Random.Range(1, 3);
                     int reproductionProb = UnityEngine.Random.Range(0, 100);
+                    //reproductionProb = 100; // for testing purposes
                     int numOffsprings = 0;
                     float minReproductionEnergy = UnityEngine.Random.Range(2f, 10f);
                     string name = names[UnityEngine.Random.Range(0, names.Count + 1)];
@@ -355,13 +354,14 @@ public class GridManager : MonoBehaviour
                     Debug.Log($"Prey created at {randomX}, {randomY}. Name: {name}");
                     preyCount++;
                 }
-                else if (random == 2)
+                else if (random == 2) // predator
                 {
                     float energyLevel = UnityEngine.Random.Range(5f, 10f);
                     float foodLevel = UnityEngine.Random.Range(5f, 10f);
                     float waterLevel = UnityEngine.Random.Range(5f, 10f);
-                    int maxOffsprings = UnityEngine.Random.Range(0, 6);
+                    int maxOffsprings = UnityEngine.Random.Range(1, 3);
                     int reproductionProb = UnityEngine.Random.Range(0, 100);
+                    //reproductionProb = 100; // for testing purposes
                     int numOffsprings = 0;
                     float minReproductionEnergy = UnityEngine.Random.Range(2f, 10f);
                     string name = names[UnityEngine.Random.Range(0, names.Count + 1)];
@@ -382,7 +382,7 @@ public class GridManager : MonoBehaviour
             {
                 Debug.Log($"No entity created at {randomX}, {randomY} due to tile not being grass, tile was {grid[randomX, randomY]}");
             }
-        } while (preyCount < minPreyCount || predatorCount < minPredatorCount || maxPreyCount > preyCount || maxPredatorCount > predatorCount);
+        } while ((preyCount < minPreyCount && maxPreyCount > preyCount) || (predatorCount < minPredatorCount && maxPredatorCount > predatorCount));
 
         
 

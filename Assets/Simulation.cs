@@ -77,7 +77,8 @@ namespace Assets
             gridManager.entityGrid = entityGrid;
             gridManager.displayEntities(entityGrid);
             gridManager.updateNewSim();
-            //gridManager.displayEntitesOnConsole(entityGrid);
+            StepCount++;
+            StepCounterText.GetComponent<Text>().text = $"Simulation Step: {StepCount.ToString()}";
         }
     }
 }

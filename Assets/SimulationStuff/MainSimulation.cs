@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -358,7 +359,7 @@ namespace Assets.SimulationStuff
             return entityGrid;
         }
 
-        public static object[,] reproduceEntities(string[,] grid, object[,] entityGrid) //if 2 Prey are next to each other and have requirements to reproduce, then have chance to actually reproduce
+        public static object[,] reproduceEntities(object[,] entityGrid) //if 2 Prey are next to each other and have requirements to reproduce, then have chance to actually reproduce
         {
             object[,] newEntityGrid = new object[entityGrid.GetLength(0), entityGrid.GetLength(1)];
 
@@ -386,6 +387,7 @@ namespace Assets.SimulationStuff
                                         int reproductionChance = Math.Min(p.getReproductionProb(), mate.getReproductionProb());
 
                                         int chance = UnityEngine.Random.Range(0, 100);
+                                        chance = 99;
                                         if (reproductionChance > chance)
                                         {
                                             //Energy
@@ -426,50 +428,48 @@ namespace Assets.SimulationStuff
             {
                 return;
             }
-            else
-            {
-                switch (EnergyType.ToUpper())
-                {
-                    case "FOOD":
-                        if (entity.GetType() == typeof(Prey))
-                        {
-                            Prey prey = (Prey)entity;
-                            prey.updateFood(foodLevel);
-                        }
-                        else
-                        {
-                            Predator predator = (Predator)entity;
-                            predator.updateFood(foodLevel);
-                        }
-                        break;
-                    case "ENERGY":
-                        if (entity.GetType() == typeof(Prey))
-                        {
-                            Prey prey = (Prey)entity;
-                            prey.updateEnergy(energyLevel);
-                        }
-                        else
-                        {
-                            Predator predator = (Predator)entity;
-                            predator.updateEnergy(energyLevel);
-                        }
-                        break;
-                    case "WATER":
-                        if (entity.GetType() == typeof(Prey))
-                        {
-                            Prey prey = (Prey)entity;
-                            prey.updateWater(waterLevel);
-                        }
-                        else
-                        {
-                            Predator predator = (Predator)entity;
-                            predator.updateWater(waterLevel);
-                        }
-                        break;
 
-                    default:
-                        break;
-                }
+            switch (EnergyType.ToUpper())
+            {
+                case "FOOD":
+                    if (entity.GetType() == typeof(Prey))
+                    {
+                        Prey prey = (Prey)entity;
+                        prey.updateFood(foodLevel);
+                    }
+                    else
+                    {
+                        Predator predator = (Predator)entity;
+                        predator.updateFood(foodLevel);
+                    }
+                    break;
+                case "ENERGY":
+                    if (entity.GetType() == typeof(Prey))
+                    {
+                        Prey prey = (Prey)entity;
+                        prey.updateEnergy(energyLevel);
+                    }
+                    else
+                    {
+                        Predator predator = (Predator)entity;
+                        predator.updateEnergy(energyLevel);
+                    }
+                    break;
+                case "WATER":
+                    if (entity.GetType() == typeof(Prey))
+                    {
+                        Prey prey = (Prey)entity;
+                        prey.updateWater(waterLevel);
+                    }
+                    else
+                    {
+                        Predator predator = (Predator)entity;
+                        predator.updateWater(waterLevel);
+                    }
+                    break;
+
+                default:
+                    break;
             }
         }
 
