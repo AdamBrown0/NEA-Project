@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="AutoRunToggle">
+    <Position X="8" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAgAAAAACAAAAAEAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\AutoRunToggle.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ButtonUI">
+    <Position X="10" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\ButtonUI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FirstLevelUI">
+    <Position X="16" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\FirstLevelUI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GridManager">
+    <Position X="8" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAASIAEAgAACBgAgAQikCQACAIAAAIAAEAAJA=</HashCode>
+      <FileName>Assets\GridManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InputDelayScript">
+    <Position X="10" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\InputDelayScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Predator">
+    <Position X="0.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Predator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Prey">
+    <Position X="5.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Prey.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RestartUI">
+    <Position X="10" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\RestartUI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SecondLevelUI">
+    <Position X="12" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\SecondLevelUI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StepSim">
+    <Position X="16" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\StepSim.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SuperSecretSettings">
+    <Position X="14" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\SuperSecretSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThirdLevelUI">
+    <Position X="16" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\ThirdLevelUI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.ConsoleStuff.DisplayOnConsole">
+    <Position X="14" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\ConsoleStuff\DisplayOnConsole.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.Entity">
+    <Position X="2.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAMiIFIABAAAABQBxCAAAABQMgAQABABkAAQAAAA=</HashCode>
+      <FileName>Assets\Entity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.Simulation">
+    <Position X="14" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAECAACIAQABAAAAgAAIAAAAAAAAQAAAAAAAAAEA=</HashCode>
+      <FileName>Assets\Simulation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.SimulationStuff.MainSimulation">
+    <Position X="12" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAggAgAAAAAAAAAQAkAAAgABBAA=</HashCode>
+      <FileName>Assets\SimulationStuff\MainSimulation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.SimulationStuff.NewSimulation">
+    <Position X="16" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgCAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\SimulationStuff\NewSimulation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.SimulationStuff.MoveEntities">
+    <Position X="14" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACIAAAAKBAAAAEAAAAAAIAAAAAAEEAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\SimulationStuff\NewSimulation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.SimulationStuff.ReproduceEntities">
+    <Position X="8" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAEAAAAAAAAAIAAAAAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\SimulationStuff\NewSimulation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.SimulationStuff.ChangeEntityValues">
+    <Position X="12" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\SimulationStuff\NewSimulation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
